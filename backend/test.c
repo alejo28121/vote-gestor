@@ -16,3 +16,5 @@ int main() {
     printf("%s", json);
     return 0;
 }
+
+printf("");
