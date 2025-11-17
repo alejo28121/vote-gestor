@@ -42,6 +42,36 @@ void ValidateUser() {
     fclose(f);
 }
 
+// Segunda funcion que entrega Presidente 
+
+void RegisVotes() {
+    FILE *f;
+    char user[50];
+    int candidato;
+
+    // Abrir o crear Votes.txt 
+    f = fopen("Votes.txt", "a");
+    if (!f) {
+        printf("Error al crear o abrir Votes.txt\n");
+        return;
+    }
+
+    // Pedir usuario 
+    printf("Ingrese su usuario: ");
+    scanf("%s", user);
+
+    // Pedir número del candidato 
+    printf("Ingrese el numero del candidato por el que vota: ");
+    scanf("%d", &candidato);
+
+    // Guardar en el archivo 
+    fprintf(f, "%s %d\n", user, candidato);
+
+    printf("Voto registrado correctamente.\n");
+
+    fclose(f);
+}
+
 int main() {
     char buffer[4096];
     size_t n = fread(buffer, 1, sizeof(buffer) - 1, stdin); // dejar espacio para \0
