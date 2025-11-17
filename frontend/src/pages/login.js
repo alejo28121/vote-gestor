@@ -5,6 +5,27 @@ import { useState } from 'react';
 
 function Login (){
     const [visibilityState, setVisibilityState] = useState(false);
+    const [datesValue, setdatesValue] = useState({
+        user: '',
+        password: '',
+    }); 
+    const SendDates = async (e) => {
+        e.preventDefault();
+        try{
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
+                method: 'POST',
+                headers: {
+                    'content-type' : 'application/json',
+                },
+                body: JSON.stringify(datesValue)
+            });
+            if(response.status == 200){
+                const
+            }
+        }catch{
+
+        }
+    }
     return(
         <div className="Main-login-container">
             <div className='Form-login-container'>
