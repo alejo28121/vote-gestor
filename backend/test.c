@@ -7,9 +7,6 @@ int main() {
     fread(buffer, 1, sizeof(buffer), stdin);
     cJSON *root = cJSON_Parse(buffer);
     char *user = cJSON_GetObjectItem(root, "user") -> valuestring;
-
-curso programcion 
-
     cJSON *resp = cJSON_CreateObject();
     cJSON_AddStringToObject(resp, "status", "ok");
     cJSON_AddStringToObject(resp, "mensaje", "User was registred");
