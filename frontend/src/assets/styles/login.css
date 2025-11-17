@@ -1,0 +1,16 @@
+.Main-login-container{
+    width: 100vw;
+    height: 100vh;
+    background-color: #f1efe9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.Form-login-container{
+    width: 28vw;
+    height: 80vh;
+    background-color: #FFFDF7;
+    border: solid #2CA58D;
+    border-radius: 2vh;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
