@@ -8,6 +8,8 @@ int main() {
     cJSON *root = cJSON_Parse(buffer);
     char *user = cJSON_GetObjectItem(root, "user") -> valuestring;
 
+printf("");
+
     cJSON *resp = cJSON_CreateObject();
     cJSON_AddStringToObject(resp, "status", "ok");
     cJSON_AddStringToObject(resp, "mensaje", "User was registred");
@@ -17,4 +19,3 @@ int main() {
     return 0;
 }
 
-printf("");
