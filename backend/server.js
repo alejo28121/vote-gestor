@@ -45,7 +45,7 @@ app.listen(process.env.PORT, process.env.URL, () => {
     console.log('Escuchando...');
 });
 
-app.get("/test", async (req, res) => {
+app.post("/test", async (req, res) => {
     try{
         const result = await runCprogram("./test.exe", req.body);
         res.json(JSON.parse(result));
