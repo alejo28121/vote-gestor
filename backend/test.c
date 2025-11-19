@@ -48,6 +48,7 @@ void ValidateUser() {
     if (found == 1){
         cJSON_AddStringToObject(resp, "status", "ok");
         cJSON_AddStringToObject(resp, "mensaje", "User was logined");
+        cJSON_AddStringToObject(resp, "user", user);
         char *json = cJSON_Print(resp);
         if (json) {
             printf("%s", json);
