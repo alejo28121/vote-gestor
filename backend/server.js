@@ -10,18 +10,14 @@ app.use(cors());
 function runCprogram(path, inputData) {
     return new Promise((resolve, reject) => {
         const child = spawn(path);
-
         let output = '';
         let errorOutput = '';
-
         child.stdout.on('data', (data) => {
             output += data.toString();
         });
-
         child.stderr.on('data', (data) => {
             errorOutput += data.toString();
         });
-
         child.on('close', (code) => {
             if (code !== 0) {
                 reject(errorOutput || `C program exited with code ${code}`);
@@ -29,8 +25,6 @@ function runCprogram(path, inputData) {
                 resolve(output);
             }
         });
-
-        // enviar JSON al programa C si espera stdin
         if (inputData) {
             child.stdin.write(JSON.stringify(inputData));
         }
