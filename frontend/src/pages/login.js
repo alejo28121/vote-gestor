@@ -2,7 +2,7 @@ import '../assets/styles/login.css'
 import View from '../assets/icons/visibility.svg'
 import ViewOff from '../assets/icons/visibility_off.svg'
 import { useState } from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 function Login (){
     const navigate = useNavigate();
@@ -23,8 +23,8 @@ function Login (){
             });
             if(response.status == 200){
                 const data = await response.json();
-                localStorage.setItem('info', data);
-                navigate('/votesystem');
+                localStorage.setItem('info', JSON.stringify(data));
+                navigate('/votesystem/principalmenu');
             }else{
                 alert("usuario invalido");
             }

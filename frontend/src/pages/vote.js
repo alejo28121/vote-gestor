@@ -1,9 +1,9 @@
 import '../assets/styles/vote.css'
 import Logout from '../assets/icons/logout.svg'
-import Vote from '../assets/icons/vote.svg'
+import Clock from '../components/clock'
+import { Outlet } from 'react-router-dom';
 
 function VotePage(){
-    const now = new Date();
     return(
         <div className="Main-container-votes">
             <div className='Container-title'>
@@ -15,15 +15,10 @@ function VotePage(){
                 </div>
             </div>
             <div className='Container-time'>
-                <span className='Time-span'>{now.toLocaleString()}</span>
+                <Clock></Clock>
                 <span className='Date-span'></span>
             </div>
-            <div className='Container-menu'>
-                <div className='Vote-menu'>
-                    <img className='Vote-icon' src={Vote}></img>
-                    <button className='Button-menu'></button>
-                </div>
-            </div>
+            <Outlet/>
             <div className='Container-logout'>
                 <img className='Logout-icon' src={Logout}></img>
             </div>

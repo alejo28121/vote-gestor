@@ -3,6 +3,8 @@
     height: 100vh;
     background-color: #fffdf7;
     color: #2f4858;
+    user-select: none;
+    overflow-x: hidden;
 }
 .Container-subtitle{
     width: 100vw;
@@ -23,19 +25,20 @@
 }
 .Container-time{
     width: 100vw;
-    height: calc(100vh / 10);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-.Container-menu{
-    width: 100vw;
     height: calc(100vh / 5);
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: start;
+}
+.Container-menu{
+    width: 100vw;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: center;
+    gap: 4vh;
 }
 .Vote-menu{
     display: flex;
@@ -45,8 +48,12 @@
     background-color: #ffb69b;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     border-radius: 2vh;
-    width: 15vw;
-    height: 20vh;
+    width: 18vw;
+    height: 25vh;
+    transition: all 0.2s;
+}
+.Vote-menu:hover{
+    transform: scale(1.1);
 }
 .Vote-icon{
     width: 4vw;
@@ -57,6 +64,122 @@
     border: none;
     border-radius: 2vh;
     margin-top: 2vh;
-    width: 10vw;
-    height: 5vh;
+    width: 12vw;
+    height: 8vh;
+    font-size: 2vh;
+    font-weight: 600;
+    color: #fffdf7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+}
+.Container-logout{
+    width: 100vw;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    padding: 2vh;
+    box-sizing: border-box;
+}
+.Logout-icon{
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.Logout-icon:hover{
+    transform: scale(1.1);
+}
+.Vote-menu-p{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffb69b;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    border-radius: 2vh;
+    width: 14vw;
+    height: 45vh;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+.Vote-menu-s{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffb69b;
+    box-shadow: 0 0 20px rgba(0, 145, 119, 0.6);
+    border-radius: 2vh;
+    width: 14vw;
+    height: 45vh;
+    transition: all 0.2s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+.Vote-menu-p:hover{
+    transform: scale(1.1);
+}
+.presidents{
+    width: 100vw;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 4vh;
+}
+.Candidate-number{
+    font-size: 3vh;
+    font-weight: 600;
+    margin-bottom: 2vh;
+}
+.Back-candidate{
+    width: 8vw;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    background-color: #fffdf7;
+    border-radius: 2vh;
+}
+.Img-candidate{
+    width: 8vw;
+    filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.4));
+    border-radius: 2vh;
+}
+.Candidate-name{
+    font-size: 2vh;
+    font-weight: 600;
+    margin-top: 2vh;
+}
+.Container-send-vote{
+    width: 100vw;
+    height: 10vh;
+    margin-top: 4vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.Button-send{
+    background-color: #2f4858;
+    border: none;
+    border-radius: 2vh;
+    margin-top: 2vh;
+    width: 12vw;
+    height: 8vh;
+    font-size: 3vh;
+    font-weight: 600;
+    color: #fffdf7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.Button-send:hover{
+    transform: scale(1.1);
 }

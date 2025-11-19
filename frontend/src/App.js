@@ -2,6 +2,9 @@ import logo from './logo.svg';
 import './App.css';
 import Login from './pages/login'
 import VotePage from './pages/vote'
+import VotesMenu from './components/votesMenu'
+import VotesMenuTwo from './components/votesMenuTwo'
+import President from './components/president'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 
 function App() {
@@ -11,7 +14,11 @@ function App() {
         <header className="App-header">
           <Routes>
             <Route path='/' element={<Login/>}/>
-            <Route path='/votesystem' element={<VotePage/>}/>
+            <Route path='/votesystem/' element={<VotePage/>}>
+              <Route path='principalmenu' element={<VotesMenu/>}/>
+              <Route path='votemenu' element={<VotesMenuTwo/>}/>
+              <Route path='president' element={<President/>}/>
+            </Route>
           </Routes>
         </header>
       </div>
