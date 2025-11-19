@@ -1,0 +1,62 @@
+.Main-container-votes{
+    width: 100vw;
+    height: 100vh;
+    background-color: #fffdf7;
+    color: #2f4858;
+}
+.Container-subtitle{
+    width: 100vw;
+    height: calc(100vh / 5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.Subtitle-box{
+    width: 50vw;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid #fa8d74;
+    border-radius: 2vh;
+}
+.Container-time{
+    width: 100vw;
+    height: calc(100vh / 10);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.Container-menu{
+    width: 100vw;
+    height: calc(100vh / 5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.Vote-menu{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffb69b;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    border-radius: 2vh;
+    width: 15vw;
+    height: 20vh;
+}
+.Vote-icon{
+    width: 4vw;
+    height: auto;
+}
+.Button-menu{
+    background-color: #2f4858;
+    border: none;
+    border-radius: 2vh;
+    margin-top: 2vh;
+    width: 10vw;
+    height: 5vh;
+}
