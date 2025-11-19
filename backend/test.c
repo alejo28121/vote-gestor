@@ -4,10 +4,11 @@
 #include "cJSON.h"
 
 void ValidateUser() {
-    FILE *f;
-    char u[50], p[50];
-    int encontrado = 0;
+    FILE *usersFile;
+    char userDb[50], pass[50], rol[20], voto[10];
+    int found = 0;
     char buffer[4096];
+
     size_t n = fread(buffer, 1, sizeof(buffer) - 1, stdin); 
     buffer[n] = '\0'; 
     cJSON *root = cJSON_Parse(buffer);
@@ -16,38 +17,35 @@ void ValidateUser() {
         return;
     }
     cJSON *userItem = cJSON_GetObjectItem(root, "user");
+    cJSON *passwordItem = cJSON_GetObjectItem(root, "password");
     if (!userItem || !cJSON_IsString(userItem)) {
         fprintf(stderr, "Missing or invalid 'user'\n");
         cJSON_Delete(root);
         return;
     }
     char *user = userItem->valuestring;
-
-    cJSON *passwordItem = cJSON_GetObjectItem(root, "password");
     if (!passwordItem || !cJSON_IsString(passwordItem)) {
-        fprintf(stderr, "Missing or invalid 'user'\n");
+        fprintf(stderr, "Missing or invalid 'password'\n");
         cJSON_Delete(root);
         return;
     }
     char *password = passwordItem->valuestring;
-
-    // Si el archivo no existe, lo crea automáticamente 
-    f = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\usuarios.txt", "a+");
-    if (!f) {
+    usersFile = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\users.csv", "a+");
+    if (!usersFile) {
         printf("No se pudo abrir el archivo.\n");
         return;
     }
-    rewind(f);
-    // Buscar usuario y contraseña
-    while (fscanf(f, "%s %s", u, p) == 2) {
-        if (strcmp(user, u) == 0 && strcmp(password, p) == 0) {
-            encontrado = 1;
+    rewind(usersFile);
+
+    while(fscanf(usersFile, "%49[^,],%49[^,],%49[^,],%9[^\n]\n", userDb, pass, rol, voto) == 4){
+        if(strcmp(user, userDb) == 0 && strcmp(password, pass) == 0){
+            found = 1;
+            fclose(usersFile);
             break;
         }
     }
-
-    if (encontrado == 1){
-        cJSON *resp = cJSON_CreateObject();
+    cJSON *resp = cJSON_CreateObject();
+    if (found == 1){
         cJSON_AddStringToObject(resp, "status", "ok");
         cJSON_AddStringToObject(resp, "mensaje", "User was logined");
         char *json = cJSON_Print(resp);
@@ -55,11 +53,8 @@ void ValidateUser() {
             printf("%s", json);
             cJSON_free(json);
         }
-        cJSON_Delete(resp);
-        cJSON_Delete(root);
     }
     else{
-        cJSON *resp = cJSON_CreateObject();
         cJSON_AddStringToObject(resp, "status", "Invalid");
         cJSON_AddStringToObject(resp, "mensaje", "Incorrect user or password");
         char *json = cJSON_Print(resp);
@@ -67,10 +62,10 @@ void ValidateUser() {
             printf("%s", json);
             cJSON_free(json);
         }
-        cJSON_Delete(resp);
-        cJSON_Delete(root);
     }
-    fclose(f);
+    cJSON_Delete(resp);
+    cJSON_Delete(root);
+    fclose(usersFile);
 }
 
 // Segunda funcion que entrega Presidente 

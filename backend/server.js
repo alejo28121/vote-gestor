@@ -45,10 +45,14 @@ app.listen(process.env.PORT, process.env.URL, () => {
     console.log('Escuchando...');
 });
 
-app.post("/test", async (req, res) => {
+app.post("/login", async (req, res) => {
     try{
-        const result = await runCprogram("./test.exe", req.body);
-        res.json(JSON.parse(result));
+        const result = JSON.parse(await runCprogram("./test.exe", req.body));
+        if (result.status === "ok") {
+            res.status(200).json(result);
+        } else {
+            res.status(401).json(result);
+        }
     }catch(error){
         res.status(500).json({ error: error});
     }
