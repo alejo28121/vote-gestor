@@ -7,6 +7,7 @@ function President(){
     const info = JSON.parse(localStorage.getItem('info'));
     const [select, setSelect] = useState(0);
     const [datesValue, setdatesValue] = useState({
+        function : 'RegisVotes',
         candidate: '',
         user: info.user,
     }); 

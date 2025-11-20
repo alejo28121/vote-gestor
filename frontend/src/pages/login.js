@@ -10,6 +10,7 @@ function Login (){
     const [datesValue, setdatesValue] = useState({
         user: '',
         password: '',
+        function: "ValidateUser",
     }); 
     const SendDates = async (e) => {
         e.preventDefault();

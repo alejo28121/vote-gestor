@@ -51,3 +51,15 @@ app.post("/login", async (req, res) => {
         res.status(500).json({ error: error});
     }
 })
+app.post("/regisvote", async (req, res) => {
+    try{
+        const result = JSON.parse(await runCprogram("./test.exe", req.body));
+        if (result.status === "ok") {
+            res.status(200).json(result);
+        } else {
+            res.status(401).json(result);
+        }
+    }catch(error){
+        res.status(500).json({ error: error});
+    }
+})

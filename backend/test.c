@@ -3,104 +3,181 @@
 #include <string.h>
 #include "cJSON.h"
 
-void ValidateUser() {
+void ValidateUser(cJSON *root) {
     FILE *usersFile;
     char userDb[50], pass[50], rol[20], voto[10];
     int found = 0;
-    char buffer[4096];
 
-    size_t n = fread(buffer, 1, sizeof(buffer) - 1, stdin); 
-    buffer[n] = '\0'; 
-    cJSON *root = cJSON_Parse(buffer);
-    if (!root) {
-        fprintf(stderr, "Invalid JSON\n");
-        return;
-    }
     cJSON *userItem = cJSON_GetObjectItem(root, "user");
     cJSON *passwordItem = cJSON_GetObjectItem(root, "password");
+
     if (!userItem || !cJSON_IsString(userItem)) {
         fprintf(stderr, "Missing or invalid 'user'\n");
         cJSON_Delete(root);
         return;
     }
-    char *user = userItem->valuestring;
     if (!passwordItem || !cJSON_IsString(passwordItem)) {
         fprintf(stderr, "Missing or invalid 'password'\n");
         cJSON_Delete(root);
         return;
     }
+
+    char *user = userItem->valuestring;
     char *password = passwordItem->valuestring;
-    usersFile = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\users.csv", "a+");
+
+    usersFile = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\users.csv", "r");
     if (!usersFile) {
         printf("No se pudo abrir el archivo.\n");
         return;
     }
-    rewind(usersFile);
 
-    while(fscanf(usersFile, "%49[^,],%49[^,],%49[^,],%9[^\n]\n", userDb, pass, rol, voto) == 4){
-        if(strcmp(user, userDb) == 0 && strcmp(password, pass) == 0){
+    while (fscanf(usersFile, "%49[^,],%49[^,],%49[^,],%9[^\n]\n", userDb, pass, rol, voto) == 4) {
+        if (strcmp(user, userDb) == 0 && strcmp(password, pass) == 0) {
             found = 1;
-            fclose(usersFile);
             break;
         }
     }
+
+    fclose(usersFile);
+
     cJSON *resp = cJSON_CreateObject();
-    if (found == 1){
+    if (found) {
         cJSON_AddStringToObject(resp, "status", "ok");
         cJSON_AddStringToObject(resp, "mensaje", "User was logined");
         cJSON_AddStringToObject(resp, "user", user);
-        char *json = cJSON_Print(resp);
-        if (json) {
-            printf("%s", json);
-            cJSON_free(json);
-        }
-    }
-    else{
+    } else {
         cJSON_AddStringToObject(resp, "status", "Invalid");
         cJSON_AddStringToObject(resp, "mensaje", "Incorrect user or password");
-        char *json = cJSON_Print(resp);
-        if (json) {
-            printf("%s", json);
-            cJSON_free(json);
-        }
     }
+
+    char *json = cJSON_Print(resp);
+    if (json) {
+        printf("%s", json);
+        cJSON_free(json);
+    }
+
     cJSON_Delete(resp);
     cJSON_Delete(root);
-    fclose(usersFile);
 }
 
-// Segunda funcion que entrega Presidente 
+void trim(char *s) {
+    int i = strlen(s) - 1;
+    while (i >= 0 && (s[i] == ' ' || s[i] == '\r' || s[i] == '\n'))
+        s[i--] = '\0';
+}
 
-void RegisVotes() {
-    FILE *f;
-    char user[50];
-    int candidato;
+void RegisVotes(cJSON *root) {
+    cJSON *userItem = cJSON_GetObjectItem(root, "user");
+    cJSON *candidateItem = cJSON_GetObjectItem(root, "candidate");
 
-    // Abrir o crear Votes.txt 
-    f = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\Votes.txt", "a");
-    if (!f) {
-        printf("Error al crear o abrir Votes.txt\n");
+    if (!userItem || !cJSON_IsString(userItem)) {
+        fprintf(stderr, "Missing or invalid 'user'\n");
+        return;
+    }
+    if (!candidateItem || !cJSON_IsString(candidateItem)) {
+        fprintf(stderr, "Missing or invalid 'candidate'\n");
         return;
     }
 
-    // Pedir usuario 
-    printf("Ingrese su usuario: ");
-    scanf("%s", user);
+    char *user = userItem->valuestring;
+    char *candidate = candidateItem->valuestring;
 
-    // Pedir número del candidato 
-    printf("Ingrese el numero del candidato por el que vota: ");
-    scanf("%d", &candidato);
+    FILE *f = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\Votes.csv", "r");
+    if (!f) {
+        printf("Error al abrir Votes.csv\n");
+        return;
+    }
 
-    // Guardar en el archivo 
-    fprintf(f, "%s %d\n", user, candidato);
+    FILE *temp = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\Votes_tmp.csv", "w");
+    if (!temp) {
+        printf("Error al crear Votes_tmp.csv\n");
+        fclose(f);
+        return;
+    }
 
-    printf("Voto registrado correctamente.\n");
+    char line[256];
+    int found = 0;
+    fprintf(temp, "candidate,votes\n");
+    fgets(line, sizeof(line), f);
+    while (fgets(line, sizeof(line), f)) {
+        trim(line);
+        char candidateA[128];
+        char votesStr[64];
+        int votes;
+        if (sscanf(line, "%127[^,],%63[^\n]", candidateA, votesStr) == 2) {
+            trim(candidateA); 
+            trim(votesStr);
+            if (strcmp(candidateA, candidate) == 0) {
+                votes = atoi(votesStr) + 1;
+                found = 1;
+            } else {
+                votes = atoi(votesStr);
+            }
+            char votesS[200];
+            sprintf(votesS, "%d", votes);
+            fprintf(temp, "%s,%s\n", candidateA, votesS);
+        }
+    }
+
+    // Si el candidato no existía, agregarlo al final
+    if (!found) {
+        fprintf(temp,"%s,0\n", candidate);
+    }
 
     fclose(f);
+    fclose(temp);
 
+    // Reemplazar el archivo original de forma segura
+    remove("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\Votes.csv");
+    rename(
+        "C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\Votes_tmp.csv",
+        "C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\Votes.csv"
+    );
+
+    // Respuesta JSON
+    cJSON *resp = cJSON_CreateObject();
+    cJSON_AddStringToObject(resp, "status", "ok");
+    cJSON_AddStringToObject(resp, "mensaje", "Voto registrado");
+    cJSON_AddStringToObject(resp, "user", user);
+    cJSON_AddStringToObject(resp, "candidate", candidate);
+
+    char *json = cJSON_Print(resp);
+    if (json) {
+        printf("%s", json);
+        cJSON_free(json);
+    }
+
+    cJSON_Delete(resp);
+    cJSON_Delete(root);
 }
 
+
+
 int main() {
-    ValidateUser();
+    char buffer[4096];
+    size_t n = fread(buffer, 1, sizeof(buffer) - 1, stdin);
+    buffer[n] = '\0';
+
+    cJSON *root = cJSON_Parse(buffer);
+    if (!root) {
+        fprintf(stderr, "Invalid JSON\n");
+        return 0;
+    }
+
+    cJSON *functionItem = cJSON_GetObjectItem(root, "function");
+    if (!functionItem || !cJSON_IsString(functionItem)) {
+        fprintf(stderr, "Missing or invalid 'function'\n");
+        cJSON_Delete(root);
+        return 0;
+    }
+
+    char *functionValue = functionItem->valuestring;
+
+    if (strcmp(functionValue, "ValidateUser") == 0) {
+        ValidateUser(root);
+    } else if (strcmp(functionValue, "RegisVotes") == 0) {
+        RegisVotes(root);
+    }
+
     return 0;
 }
