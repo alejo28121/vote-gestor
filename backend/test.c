@@ -3,6 +3,29 @@
 #include <string.h>
 #include "cJSON.h"
 
+int validarUsuario(char nombre[], char cedula[], char departamento[], char municipio[]) {
+    FILE *f;
+    char nom[50], cc[50], dep[50], mun[50];
+
+    f = fopen("usuarios.txt", "r");
+
+    // Si el archivo no existe, se considera que no hay registros 
+    if (f == NULL) {
+        return 1;  // OK - No existe el usuario
+    }
+
+    // Buscar si la cédula ya existe 
+    while (fscanf(f, "%s %s %s %s", nom, cc, dep, mun) == 4) {
+        if (strcmp(cc, cedula) == 0) {
+            fclose(f);
+            return 0;  // ERROR - Ya existe esa cedula
+        }
+    }
+
+    fclose(f);
+    return 1;  // OK - No existe, se puede registrar
+}
+
 void ValidateUser() {
     FILE *usersFile;
     char userDb[50], pass[50], rol[20], voto[10];
