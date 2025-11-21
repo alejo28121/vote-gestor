@@ -3,6 +3,95 @@
 #include <string.h>
 #include "cJSON.h"
 
+void RegisVotes(cJSON *root) {
+    cJSON *userItem = cJSON_GetObjectItem(root, "user");
+    cJSON *candidateItem = cJSON_GetObjectItem(root, "candidate");
+
+    if (!userItem || !cJSON_IsString(userItem)) {
+        fprintf(stderr, "Missing or invalid 'user'\n");
+        return;
+    }
+    if (!candidateItem || !cJSON_IsString(candidateItem)) {
+        fprintf(stderr, "Missing or invalid 'candidate'\n");
+        return;
+    }
+
+    char *user = userItem->valuestring;
+    char *candidate = candidateItem->valuestring;
+
+    FILE *f = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\VotosCamara.csv", "r");
+    if (!f) {
+        printf("Error al abrir VotosCamara.csv\n");
+        return;
+    }
+
+    FILE *temp = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\VotosCamara_tmp.csv", "w");
+    if (!temp) {
+        printf("Error al crear VotosCamara_tmp.csv\n");
+        fclose(f);
+        return;
+    }
+
+    char line[256];
+    int found = 0;
+    fprintf(temp, "candidate,votes\n");
+    fgets(line, sizeof(line), f);
+
+    while (fgets(line, sizeof(line), f)) {
+        trim(line);
+        char candidateA[128];
+        char votesStr[64];
+        int votes;
+
+        if (sscanf(line, "%127[^,],%63[^\n]", candidateA, votesStr) == 2) {
+            trim(candidateA); 
+            trim(votesStr);
+
+            if (strcmp(candidateA, candidate) == 0) {
+                votes = atoi(votesStr) + 1;
+                found = 1;
+            } else {
+                votes = atoi(votesStr);
+            }
+
+            char votesS[200];
+            sprintf(votesS, "%d", votes);
+            fprintf(temp, "%s,%s\n", candidateA, votesS);
+        }
+    }
+
+    if (!found) {
+        fprintf(temp,"%s,0\n", candidate);
+    }
+
+    fclose(f);
+    fclose(temp);
+
+    remove("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\VotosCamara.csv");
+
+    rename(
+        "C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\VotosCamara_tmp.csv",
+        "C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\VotosCamara.csv"
+    );
+
+    cJSON *resp = cJSON_CreateObject();
+    cJSON_AddStringToObject(resp, "status", "ok");
+    cJSON_AddStringToObject(resp, "mensaje", "Voto registrado");
+    cJSON_AddStringToObject(resp, "user", user);
+    cJSON_AddStringToObject(resp, "candidate", candidate);
+
+    char *json = cJSON_Print(resp);
+    if (json) {
+        printf("%s", json);
+        cJSON_free(json);
+    }
+
+    cJSON_Delete(resp);
+    cJSON_Delete(root);
+    return;
+}
+
+
 void VotesToJSON() {
     FILE *f;
     char linea[200];
