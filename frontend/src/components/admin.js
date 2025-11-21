@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import '../assets/styles/admin.css';
 
 function Dashboard() {
-    const [votes, setVotes] = useState({}); // objeto { candidato: votos }
+    const [votes, setVotes] = useState({}); 
     const socketRef = useRef(null);
 
     useEffect(() => {
@@ -16,11 +16,11 @@ function Dashboard() {
         ws.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
-                if (data.votes) { // asumimos que llega { votes: [ { candidate, votes }, ... ] }
+                if (data.votes) { 
                     setVotes(prev => {
                         const newVotes = { ...prev };
                         data.votes.forEach(item => {
-                            newVotes[item.candidate] = item.votes; // actualiza o agrega
+                            newVotes[item.candidate] = item.votes; 
                         });
                         return newVotes;
                     });

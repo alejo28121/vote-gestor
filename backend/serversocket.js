@@ -8,7 +8,7 @@ console.log("WebSocket en ws://localhost:8080/socket");
 wss.on('connection', (ws) => {
     console.log("Cliente conectado");
     ws.send(JSON.stringify({ msg: "Conexión establecida" }));
-    const proceso = spawn('./socket.exe'); 
+    const proceso = spawn('./socket'); 
     console.log("Ejecutable iniciado para este cliente");
     proceso.stdout.on('data', (data) => {
         const text = data.toString();

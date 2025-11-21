@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import Login from './pages/login'
+import Register from './components/register';
 import VotePage from './pages/vote'
 import VotesMenu from './components/votesMenu'
 import VotesMenuTwo from './components/votesMenuTwo'
@@ -15,6 +16,7 @@ function App() {
         <header className="App-header">
           <Routes>
             <Route path='/' element={<Login/>}/>
+            <Route path='/register' element={<Register/>}/>
             <Route path='/votesystem/' element={<VotePage/>}>
               <Route path='principalmenu' element={<VotesMenu/>}/>
               <Route path='votemenu' element={<VotesMenuTwo/>}/>

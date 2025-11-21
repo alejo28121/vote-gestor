@@ -41,7 +41,7 @@ app.listen(process.env.PORT, process.env.URL, () => {
 
 app.post("/login", async (req, res) => {
     try{
-        const result = JSON.parse(await runCprogram("./test.exe", req.body));
+        const result = JSON.parse(await runCprogram("./test", req.body));
         if (result.status === "ok") {
             res.status(200).json(result);
         } else {
@@ -53,7 +53,19 @@ app.post("/login", async (req, res) => {
 })
 app.post("/regisvote", async (req, res) => {
     try{
-        const result = JSON.parse(await runCprogram("./test.exe", req.body));
+        const result = JSON.parse(await runCprogram("./test", req.body));
+        if (result.status === "ok") {
+            res.status(200).json(result);
+        } else {
+            res.status(401).json(result);
+        }
+    }catch(error){
+        res.status(500).json({ error: error});
+    }
+})
+app.post("/regisuser", async (req, res) => {
+    try{
+        const result = JSON.parse(await runCprogram("./test", req.body));
         if (result.status === "ok") {
             res.status(200).json(result);
         } else {

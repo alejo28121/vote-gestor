@@ -25,13 +25,13 @@ void RegisVotesCamara(cJSON *root) {
     char *user = userItem->valuestring;
     char *candidate = candidateItem->valuestring;
 
-    FILE *f = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\VotosCamara.csv", "r");
+    FILE *f = fopen("/home/ec2-user/votemanager/VotosCamara.csv", "r");
     if (!f) {
         printf("Error al abrir VotosCamara.csv\n");
         return;
     }
 
-    FILE *temp = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\VotosCamara_tmp.csv", "w");
+    FILE *temp = fopen("/home/ec2-user/votemanager/VotosCamara_tmp.csv", "w");
     if (!temp) {
         printf("Error al crear VotosCamara_tmp.csv\n");
         fclose(f);
@@ -73,11 +73,11 @@ void RegisVotesCamara(cJSON *root) {
     fclose(f);
     fclose(temp);
 
-    remove("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\VotosCamara.csv");
+    remove("/home/ec2-user/votemanager/VotosCamara.csv");
 
     rename(
-        "C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\VotosCamara_tmp.csv",
-        "C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\VotosCamara.csv"
+        "/home/ec2-user/votemanager/VotosCamara_tmp.csv",
+        "/home/ec2-user/votemanager/VotosCamara.csv"
     );
 
     cJSON *resp = cJSON_CreateObject();
@@ -97,11 +97,11 @@ void RegisVotesCamara(cJSON *root) {
     return;
 }
 
-int validarUsuario(char nombre[], char cedula[], char departamento[], char municipio[]) {
+/*
+int validarUsuario() {
     FILE *f;
-    char nom[50], cc[50], dep[50], mun[50];
 
-    f = fopen("usuarios.txt", "r");
+    f = fopen("users.csv", "r");
     if (f == NULL) {
         return 1;  
     }
@@ -114,6 +114,76 @@ int validarUsuario(char nombre[], char cedula[], char departamento[], char munic
     fclose(f);
     return 1;  
 }
+*/
+void RegisUser(cJSON *root) {
+    if (!root) return;
+
+    cJSON *userItem = cJSON_GetObjectItem(root, "user");
+    cJSON *passItem = cJSON_GetObjectItem(root, "password");
+
+    if (!userItem || !cJSON_IsString(userItem) ||
+        !passItem || !cJSON_IsString(passItem)) 
+    {
+        fprintf(stderr, "{\"status\":\"error\",\"message\":\"Invalid JSON input\"}\n");
+        return;
+    }
+
+    const char *id = userItem->valuestring;
+    const char *password = passItem->valuestring;
+    const char *role = "2";      
+    const char *voted = "no";    
+
+    FILE *f = fopen("/home/ec2-user/votemanager/users.csv", "r");
+    int exists = 0;
+
+    if (f) {
+        char line[256];
+        char uid[50], pass[50], roleFile[10], votedFile[10];
+
+        fgets(line, sizeof(line), f);
+        while (fgets(line, sizeof(line), f)) {
+            line[strcspn(line, "\r\n")] = 0;
+            if (sscanf(line, "%49[^,],%49[^,],%9[^,],%9s", uid, pass, roleFile, votedFile) == 4) {
+                if (strcmp(uid, id) == 0) {
+                    exists = 1;
+                    break;
+                }
+            }
+        }
+        fclose(f);
+    }
+
+    cJSON *resp = cJSON_CreateObject();
+
+    if (exists) {
+        cJSON_AddStringToObject(resp, "status", "error");
+        cJSON_AddStringToObject(resp, "message", "User already registered");
+    } else {
+        FILE *f2 = fopen("/home/ec2-user/votemanager/users.csv", "a");
+        if (!f2) {
+            cJSON_AddStringToObject(resp, "status", "error");
+            cJSON_AddStringToObject(resp, "message", "Cannot open file to register user");
+        } else {
+            fseek(f2, 0, SEEK_END);
+            if (ftell(f2) == 0) {
+                fprintf(f2, "nombre,password,rol,voted\n");
+            }
+            fprintf(f2, "%s,%s,%s,%s\n", id, password, role, voted);
+            fclose(f2);
+
+            cJSON_AddStringToObject(resp, "status", "ok");
+            cJSON_AddStringToObject(resp, "message", "User registered successfully");
+        }
+    }
+
+    char *json = cJSON_Print(resp);
+    if (json) {
+        printf("%s\n", json);
+        cJSON_free(json);
+    }
+    cJSON_Delete(resp);
+}
+
 
 void ValidateUser(cJSON *root) {
     FILE *usersFile;
@@ -137,7 +207,7 @@ void ValidateUser(cJSON *root) {
     char *user = userItem->valuestring;
     char *password = passwordItem->valuestring;
 
-    usersFile = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\users.csv", "r");
+    usersFile = fopen("/home/ec2-user/votemanager/users.csv", "r");
     if (!usersFile) {
         printf("No se pudo abrir el archivo.\n");
         return;
@@ -189,13 +259,13 @@ void RegisVotes(cJSON *root) {
     char *user = userItem->valuestring;
     char *candidate = candidateItem->valuestring;
 
-    FILE *f = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\Votes.csv", "r");
+    FILE *f = fopen("/home/ec2-user/votemanager/Votes.csv", "r");
     if (!f) {
         printf("Error al abrir Votes.csv\n");
         return;
     }
 
-    FILE *temp = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\Votes_tmp.csv", "w");
+    FILE *temp = fopen("/home/ec2-user/votemanager/Votes_tmp.csv", "w");
     if (!temp) {
         printf("Error al crear Votes_tmp.csv\n");
         fclose(f);
@@ -230,10 +300,10 @@ void RegisVotes(cJSON *root) {
     }
     fclose(f);
     fclose(temp);
-    remove("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\Votes.csv");
+    remove("/home/ec2-user/votemanager/Votes.csv");
     rename(
-        "C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\Votes_tmp.csv",
-        "C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\Votes.csv"
+        "/home/ec2-user/votemanager/Votes_tmp.csv",
+        "/home/ec2-user/votemanager/Votes.csv"
     );
     cJSON *resp = cJSON_CreateObject();
     cJSON_AddStringToObject(resp, "status", "ok");
@@ -249,8 +319,6 @@ void RegisVotes(cJSON *root) {
     cJSON_Delete(root);
     return;
 }
-
-
 
 int main() {
     char buffer[4096];
@@ -276,7 +344,8 @@ int main() {
         ValidateUser(root);
     } else if (strcmp(functionValue, "RegisVotes") == 0) {
         RegisVotes(root);
+    }else if (strcmp(functionValue, "RegisUser") == 0) {
+        RegisUser(root);
     }
-
     return 0;
 }

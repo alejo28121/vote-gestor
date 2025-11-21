@@ -64,7 +64,8 @@ function Login (){
                     </div>
                     <div className='Create-content'>
                         <span>¿Aun no te has registrado?</span>
-                        <span className='Sing-up'>Registrarse</span>
+                        <span className='Sing-up' onClick={() =>
+                            navigate('/register')}>Registrarse</span>
                     </div>
                 </form>
             </div>
