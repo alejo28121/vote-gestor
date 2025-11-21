@@ -5,6 +5,7 @@ import VotePage from './pages/vote'
 import VotesMenu from './components/votesMenu'
 import VotesMenuTwo from './components/votesMenuTwo'
 import President from './components/president'
+import Dashboard from './components/admin'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
               <Route path='principalmenu' element={<VotesMenu/>}/>
               <Route path='votemenu' element={<VotesMenuTwo/>}/>
               <Route path='president' element={<President/>}/>
+              <Route path='dashboard' element={<Dashboard/>}/>
             </Route>
           </Routes>
         </header>

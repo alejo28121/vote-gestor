@@ -3,63 +3,98 @@
 #include <string.h>
 #include "cJSON.h"
 
-void VotesToJSON() {
-    FILE *f;
-    char linea[200];
-    int primero = 1;
+void trim(char *s) {
+    int i = strlen(s) - 1;
+    while (i >= 0 && (s[i] == ' ' || s[i] == '\r' || s[i] == '\n'))
+        s[i--] = '\0';
+}
 
-    f = fopen("Votes.csv", "r");
-    if (f == NULL) {
-        printf("Error: No se pudo abrir Votes.csv\n");
+void RegisVotesCamara(cJSON *root) {
+    cJSON *userItem = cJSON_GetObjectItem(root, "user");
+    cJSON *candidateItem = cJSON_GetObjectItem(root, "candidate");
+
+    if (!userItem || !cJSON_IsString(userItem)) {
+        fprintf(stderr, "Missing or invalid 'user'\n");
+        return;
+    }
+    if (!candidateItem || !cJSON_IsString(candidateItem)) {
+        fprintf(stderr, "Missing or invalid 'candidate'\n");
         return;
     }
 
-    printf("{\n  \"votes\": [\n");
+    char *user = userItem->valuestring;
+    char *candidate = candidateItem->valuestring;
 
-    // Leer cada línea del archivo 
-    while (fgets(linea, sizeof(linea), f)) {
-
-        // Quitar salto de linea 
-        linea[strcspn(linea, "\n")] = 0;
-
-        // Separar User y Candidato 
-        char user[50];
-        char candidato[50];
-
-        int i = 0, j = 0, k = 0;
-        int separador = 0;
-
-        while (linea[i] != '\0') {
-            if (linea[i] == ',') {
-                separador = 1;
-                i++;
-                continue;
-            }
-
-            if (separador == 0) {
-                user[j++] = linea[i];
-            } else {
-                candidato[k++] = linea[i];
-            }
-            i++;
-        }
-
-        user[j] = '\0';
-        candidato[k] = '\0';
-
-        // Imprimir coma entre objetos JSON 
-        if (!primero) {
-            printf(",\n");
-        }
-        primero = 0;
-
-        // Imprimir objeto JSON 
-        printf("    { \"user\": \"%s\", \"candidato\": \"%s\" }", user, candidato);
+    FILE *f = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\VotosCamara.csv", "r");
+    if (!f) {
+        printf("Error al abrir VotosCamara.csv\n");
+        return;
     }
 
-    printf("\n  ]\n}\n");
+    FILE *temp = fopen("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\VotosCamara_tmp.csv", "w");
+    if (!temp) {
+        printf("Error al crear VotosCamara_tmp.csv\n");
+        fclose(f);
+        return;
+    }
+
+    char line[256];
+    int found = 0;
+    fprintf(temp, "candidate,votes\n");
+    fgets(line, sizeof(line), f);
+
+    while (fgets(line, sizeof(line), f)) {
+        trim(line);
+        char candidateA[128];
+        char votesStr[64];
+        int votes;
+
+        if (sscanf(line, "%127[^,],%63[^\n]", candidateA, votesStr) == 2) {
+            trim(candidateA); 
+            trim(votesStr);
+
+            if (strcmp(candidateA, candidate) == 0) {
+                votes = atoi(votesStr) + 1;
+                found = 1;
+            } else {
+                votes = atoi(votesStr);
+            }
+
+            char votesS[200];
+            sprintf(votesS, "%d", votes);
+            fprintf(temp, "%s,%s\n", candidateA, votesS);
+        }
+    }
+
+    if (!found) {
+        fprintf(temp,"%s,0\n", candidate);
+    }
 
     fclose(f);
+    fclose(temp);
+
+    remove("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\VotosCamara.csv");
+
+    rename(
+        "C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\VotosCamara_tmp.csv",
+        "C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\VotosCamara.csv"
+    );
+
+    cJSON *resp = cJSON_CreateObject();
+    cJSON_AddStringToObject(resp, "status", "ok");
+    cJSON_AddStringToObject(resp, "mensaje", "Voto registrado");
+    cJSON_AddStringToObject(resp, "user", user);
+    cJSON_AddStringToObject(resp, "candidate", candidate);
+
+    char *json = cJSON_Print(resp);
+    if (json) {
+        printf("%s", json);
+        cJSON_free(json);
+    }
+
+    cJSON_Delete(resp);
+    cJSON_Delete(root);
+    return;
 }
 
 int validarUsuario(char nombre[], char cedula[], char departamento[], char municipio[]) {
@@ -67,22 +102,17 @@ int validarUsuario(char nombre[], char cedula[], char departamento[], char munic
     char nom[50], cc[50], dep[50], mun[50];
 
     f = fopen("usuarios.txt", "r");
-
-    // Si el archivo no existe, se considera que no hay registros 
     if (f == NULL) {
-        return 1;  // OK - No existe el usuario
+        return 1;  
     }
-
-    // Buscar si la cédula ya existe 
     while (fscanf(f, "%s %s %s %s", nom, cc, dep, mun) == 4) {
         if (strcmp(cc, cedula) == 0) {
             fclose(f);
-            return 0;  // ERROR - Ya existe esa cedula
+            return 0;  
         }
     }
-
     fclose(f);
-    return 1;  // OK - No existe, se puede registrar
+    return 1;  
 }
 
 void ValidateUser(cJSON *root) {
@@ -127,6 +157,7 @@ void ValidateUser(cJSON *root) {
         cJSON_AddStringToObject(resp, "status", "ok");
         cJSON_AddStringToObject(resp, "mensaje", "User was logined");
         cJSON_AddStringToObject(resp, "user", user);
+        cJSON_AddStringToObject(resp, "rol", rol);
     } else {
         cJSON_AddStringToObject(resp, "status", "Invalid");
         cJSON_AddStringToObject(resp, "mensaje", "Incorrect user or password");
@@ -140,12 +171,6 @@ void ValidateUser(cJSON *root) {
 
     cJSON_Delete(resp);
     cJSON_Delete(root);
-}
-
-void trim(char *s) {
-    int i = strlen(s) - 1;
-    while (i >= 0 && (s[i] == ' ' || s[i] == '\r' || s[i] == '\n'))
-        s[i--] = '\0';
 }
 
 void RegisVotes(cJSON *root) {
