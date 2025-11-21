@@ -41,7 +41,7 @@ app.listen(process.env.PORT, process.env.URL, () => {
 
 app.post("/login", async (req, res) => {
     try{
-        const result = JSON.parse(await runCprogram("./test", req.body));
+        const result = JSON.parse(await runCprogram("./test.exe", req.body));
         if (result.status === "ok") {
             res.status(200).json(result);
         } else {
