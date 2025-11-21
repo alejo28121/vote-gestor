@@ -3,6 +3,65 @@
 #include <string.h>
 #include "cJSON.h"
 
+void VotesToJSON() {
+    FILE *f;
+    char linea[200];
+    int primero = 1;
+
+    f = fopen("Votes.csv", "r");
+    if (f == NULL) {
+        printf("Error: No se pudo abrir Votes.csv\n");
+        return;
+    }
+
+    printf("{\n  \"votes\": [\n");
+
+    // Leer cada línea del archivo 
+    while (fgets(linea, sizeof(linea), f)) {
+
+        // Quitar salto de linea 
+        linea[strcspn(linea, "\n")] = 0;
+
+        // Separar User y Candidato 
+        char user[50];
+        char candidato[50];
+
+        int i = 0, j = 0, k = 0;
+        int separador = 0;
+
+        while (linea[i] != '\0') {
+            if (linea[i] == ',') {
+                separador = 1;
+                i++;
+                continue;
+            }
+
+            if (separador == 0) {
+                user[j++] = linea[i];
+            } else {
+                candidato[k++] = linea[i];
+            }
+            i++;
+        }
+
+        user[j] = '\0';
+        candidato[k] = '\0';
+
+        // Imprimir coma entre objetos JSON 
+        if (!primero) {
+            printf(",\n");
+        }
+        primero = 0;
+
+        // Imprimir objeto JSON 
+        printf("    { \"user\": \"%s\", \"candidato\": \"%s\" }", user, candidato);
+    }
+
+    printf("\n  ]\n}\n");
+
+    fclose(f);
+}
+
 int validarUsuario(char nombre[], char cedula[], char departamento[], char municipio[]) {
     FILE *f;
     char nom[50], cc[50], dep[50], mun[50];
