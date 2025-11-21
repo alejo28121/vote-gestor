@@ -200,37 +200,29 @@ void RegisVotes(cJSON *root) {
             fprintf(temp, "%s,%s\n", candidateA, votesS);
         }
     }
-
-    // Si el candidato no existía, agregarlo al final
     if (!found) {
         fprintf(temp,"%s,0\n", candidate);
     }
-
     fclose(f);
     fclose(temp);
-
-    // Reemplazar el archivo original de forma segura
     remove("C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\Votes.csv");
     rename(
         "C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\Votes_tmp.csv",
         "C:\\Users\\graja\\OneDrive\\Documentos\\Proyectos\\voteManager\\backend\\Votes.csv"
     );
-
-    // Respuesta JSON
     cJSON *resp = cJSON_CreateObject();
     cJSON_AddStringToObject(resp, "status", "ok");
     cJSON_AddStringToObject(resp, "mensaje", "Voto registrado");
     cJSON_AddStringToObject(resp, "user", user);
     cJSON_AddStringToObject(resp, "candidate", candidate);
-
     char *json = cJSON_Print(resp);
     if (json) {
         printf("%s", json);
         cJSON_free(json);
     }
-
     cJSON_Delete(resp);
     cJSON_Delete(root);
+    return;
 }
 
 
