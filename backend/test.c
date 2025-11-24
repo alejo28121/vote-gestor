@@ -3,6 +3,45 @@
 #include <string.h>
 #include "cJSON.h"
 
+// Funcion para quitar un candidato 
+
+void EliminarCandidato(char nombreBuscar[]) {
+
+    FILE *f = fopen("candidatos.txt", "r");
+    FILE *temp = fopen("temp.txt", "w");
+
+    char nombre[100];
+    int encontrado = 0;
+
+    if (f == NULL || temp == NULL) {
+        printf("Error al abrir archivos.\n");
+        return;
+    }
+
+    while (fgets(nombre, sizeof(nombre), f)) {
+
+        nombre[strcspn(nombre, "\n")] = 0; 
+
+        if (strcmp(nombre, nombreBuscar) == 0) {
+            encontrado = 1;  
+        } else {
+            fprintf(temp, "%s\n", nombre);  
+        }
+    }
+
+    fclose(f);
+    fclose(temp);
+
+    remove("candidatos.txt");
+    rename("temp.txt", "candidatos.txt");
+
+    if (encontrado) {
+        printf("Candidato eliminado correctamente.\n");
+    } else {
+        printf("Candidato no encontrado.\n");
+    }
+}
+
 // Funcion Recibe JSON 
 void RecibirJson(cJSON *root) {
 
