@@ -3,6 +3,55 @@
 #include <string.h>
 #include "cJSON.h"
 
+// Funcion Recibe JSON 
+void RecibirJson(cJSON *root) {
+
+    cJSON *idItem   = cJSON_GetObjectItem(root, "id");
+    cJSON *nameItem = cJSON_GetObjectItem(root, "name");
+    cJSON *imgItem  = cJSON_GetObjectItem(root, "img");
+
+    if (!idItem || !nameItem || !imgItem) {
+        printf("ERROR: Faltan datos en el JSON\n");
+        return;
+    }
+
+    if (!cJSON_IsString(idItem) || !cJSON_IsString(nameItem) || !cJSON_IsString(imgItem)) {
+        printf("ERROR: Datos invalidos\n");
+        return;
+    }
+
+    char *id   = idItem->valuestring;
+    char *name = nameItem->valuestring;
+    char *img  = imgItem->valuestring;
+
+    printf("----- DATOS RECIBIDOS -----\n");
+    printf("ID: %s\n", id);
+    printf("Nombre: %s\n", name);
+    printf("Imagen: %s\n", img);
+}
+
+int main() {
+
+    // JSON de ejemplo (simula el que envias)
+    char jsonText[] = "{ \"id\" : \"Any number\", \"name\" : \"Something\", \"img\" : \"Something\" }";
+
+    // Convertir texto a JSON
+    cJSON *root = cJSON_Parse(jsonText);
+
+    if (!root) {
+        printf("Error al leer el JSON\n");
+        return 0;
+    }
+
+    // Llamar a la funcion
+    RecibirJson(root);
+
+    // Liberar memoria
+    cJSON_Delete(root);
+
+    return 0;
+}
+
 void trim(char *s) {
     int i = strlen(s) - 1;
     while (i >= 0 && (s[i] == ' ' || s[i] == '\r' || s[i] == '\n'))
