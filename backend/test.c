@@ -100,8 +100,7 @@ void RegisUser(cJSON *root) {
 
         while (fgets(line, sizeof(line), f)) {
             line[strcspn(line, "\n")] = 0;
-            if (sscanf(line, "%49[^,],%49[^,],%9[^,],%9s",
-                       uid, pass, roleFile, votedFile) == 4) {
+            if (sscanf(line, "%49[^,],%49[^,],%9[^,],%9s", uid, pass, roleFile, votedFile) == 4) {
                 if (strcmp(uid, id) == 0) {
                     exists = 1;
                     break;
@@ -155,10 +154,9 @@ void ValidateUser(cJSON *root) {
     }
 
     char header[256];
-    fgets(header, sizeof(header), usersFile);  // << SALTAR ENCABEZADO
+    fgets(header, sizeof(header), usersFile);  
 
-    while (fscanf(usersFile, "%49[^,],%49[^,],%49[^,],%9[^\n]\n",
-                  userDb, pass, rol, voto) == 4) {
+    while (fscanf(usersFile, "%49[^,],%49[^,],%49[^,],%9[^\n]\n", userDb, pass, rol, voto) == 4) {
 
         if (strcmp(user, userDb) == 0 && strcmp(password, pass) == 0) {
             found = 1;
@@ -258,7 +256,7 @@ void RegisVotes(cJSON *root) {
     cJSON_Delete(resp);
     cJSON_Delete(root);
 }
-// Esta es la funcion validad los votos 
+
 void ValidateVote(cJSON *root) {
     cJSON *userItem = cJSON_GetObjectItem(root, "user");
 

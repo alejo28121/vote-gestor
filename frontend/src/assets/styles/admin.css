@@ -1,8 +1,47 @@
 .Main-dashboard{
     width: 100vw;
-    height: 40vh;
-    background-color: #fffdf7;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.Items-container{
+    width: 60vw;
+    display: flex;
+    flex-wrap: 3;
+}
+.list-votes{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 4vh;
+    width: 30vw;
+    height: fit-content;
+    border: solid #fa8d74;
+    border-radius: 2vh;
+    padding: 2vh;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 .Votes-text{
+    font-size: 2vh;
+    border: none;
+}
+.Diagram-container{
+    width: 100vw;
+    height: 30vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.Subcontainer-diagram{
+    width: 100%;
+    height: 100%;
+}
+.Subcontainer-diagram canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+.Vote-title{
     font-size: 3vh;
 }

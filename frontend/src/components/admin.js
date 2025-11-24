@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import '../assets/styles/admin.css';
+import PieChart from './circular';
 
 function Dashboard() {
     const [votes, setVotes] = useState({}); 
@@ -44,17 +45,25 @@ function Dashboard() {
             }
         };
     }, []);
-
     return (
         <div className='Main-dashboard'>
-            <h2>Votos por candidato</h2>
-            <ul>
-                {Object.entries(votes).map(([candidate, count]) => (
-                    <p className='Votes-text' key={candidate}>
-                        {candidate}: {count} votos
-                    </p>
-                ))}
-            </ul>
+            <div className='Items-container'>
+                <div className='list-votes'>
+                    <h2 className='Vote-title'>Votos por candidato</h2>
+                        {Object.entries(votes).map(([candidate, count]) => (
+                            <p className='Votes-text' key={candidate}>
+                                {candidate}: {count} votos
+                            </p>
+                        ))}
+                </div>
+                <div className='list-votes'>
+                    <h2 className='Vote-title'>Diagrama</h2>
+                    <PieChart
+                        labels={Object.keys(votes)} 
+                        data={Object.values(votes)} 
+                    />
+                </div>
+            </div>
         </div>
     );
 }
