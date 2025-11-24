@@ -20,6 +20,26 @@
     align-items: center;
     justify-content: space-between;
 }
+.Title-item-container-s{
+    margin: 0;
+    border: solid transparent;
+    padding: 1vh;
+    border-top-left-radius: 2vh;
+    border-top-right-radius: 2vh;
+    transition: all 0.1s;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border: solid #fa8d74;
+}
+.Item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 .Title-item{
     font-size: 2vh;
 }
@@ -35,36 +55,82 @@
 .Items-container-list{
     display: none;
 }
-.Items-container-list-1{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: start;
-    width: 100%;
-    background-color: ;
-    height: fit-content;
-    font-size: 2vh;
-    padding-left: 2vh;
-}
-.Items-container-list-2{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: start;
-    width: 100%;
-    background-color: ;
-    height: fit-content;
-    font-size: 2vh;
-    padding-left: 2vh;
-}
+.Items-container-list-1,
+.Items-container-list-2,
 .Items-container-list-3{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: start;
     width: 100%;
-    background-color: ;
+    background-color: rgba(252, 250, 244, 1);
+    border-bottom-left-radius: 2vh;
+    border-bottom-right-radius: 2vh;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
     height: fit-content;
-    font-size: 2vh;
     padding-left: 2vh;
+    padding-right: 2vh;
+    box-sizing: border-box;
+    font-size: 1vh;
+}
+.Item-check{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1vh;
+    box-sizing: border-box;
+}
+.check{
+    width: 1vw;
+    border-radius: 50%;
+}
+.check-o{
+    display: none;
+}
+.Buttons-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2vh;
+    margin: 1vh;
+    box-sizing: border-box;
+}
+.Edit-icon{
+    border-radius: 50%;
+    padding: 1vh;
+    transition: all 0.3s;
+}
+.Edit-icon:hover{
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.Edit-icon-c{
+    display: none;
+}
+.Delete-icon{
+    display: none;
+}
+.Add-icon{
+    display: none;
+}
+.Buttons-sucess{
+    display: none;
+}
+.Buttons-sucess-c{
+    width: 100%;
+    margin: 2vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.Save-button{
+    width: 8vw;
+    height: 4vh;
+    border-radius: 2vh;
+    background-color: #2f4858;
+    color: #fffdf7;
+    font-weight: 500;
+    border: none;
 }
