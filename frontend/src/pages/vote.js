@@ -20,7 +20,7 @@ function VotePage(){
             </div>
             <Outlet/>
             <div className='Container-logout'>
-                <img className='Logout-icon' src={Logout}></img>
+                <img className='Logout-icon' src={Logout} alt='Icon'></img>
             </div>
         </div>
     );

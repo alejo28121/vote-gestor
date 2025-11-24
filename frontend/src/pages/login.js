@@ -22,7 +22,7 @@ function Login (){
                 },
                 body: JSON.stringify(datesValue)
             });
-            if(response.status == 200){
+            if(response.status === 200){
                 const data = await response.json();
                 localStorage.setItem('info', JSON.stringify(data));
                 navigate('/votesystem/principalmenu');
@@ -55,7 +55,7 @@ function Login (){
                                 password: e.target.value
                             }))
                         }></input>
-                        <img className='Visibility-icon' src={visibilityState ? ViewOff : View} onClick={() => {
+                        <img className='Visibility-icon' alt='Icon' src={visibilityState ? ViewOff : View} onClick={() => {
                             setVisibilityState(!visibilityState);
                         }}></img>
                     </div>

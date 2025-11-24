@@ -1,9 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import '../assets/styles/admin.css';
 import PieChart from './circular';
+import BarChart from './Bar';
+import EditCandidates from './editcandidates'
 
 function Dashboard() {
     const [votes, setVotes] = useState({}); 
+    const [diagram, setDiagram] = useState("1");
     const socketRef = useRef(null);
 
     useEffect(() => {
@@ -58,11 +61,25 @@ function Dashboard() {
                 </div>
                 <div className='list-votes'>
                     <h2 className='Vote-title'>Diagrama</h2>
-                    <PieChart
-                        labels={Object.keys(votes)} 
-                        data={Object.values(votes)} 
-                    />
+                    <div className='List-container'>
+                        <select className='List' onChange={(e) => setDiagram(e.target.value)}>
+                            <option value={"1"}>Diagrama de torta</option>
+                            <option value={"2"}>Diagrama de barras</option>
+                        </select>
+                    </div>
+                    {diagram === "1" ? (
+                        <PieChart
+                            labels={Object.keys(votes)} 
+                            data={Object.values(votes)} 
+                        />
+                        ) : (
+                        <BarChart
+                            labels={Object.keys(votes)} 
+                            data={Object.values(votes)} 
+                        />
+                    )}
                 </div>
+                <EditCandidates candidates={votes}></EditCandidates>
             </div>
         </div>
     );

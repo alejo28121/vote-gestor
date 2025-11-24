@@ -7,18 +7,18 @@ export default function PieChart({ labels, data }) {
     const chartData = {
         labels: labels,
         datasets: [
-        {
-            data: data,
-            backgroundColor: [
-            "rgb(250, 141, 116)",
-            "rgb(0, 121, 211)",
-            "rgb(196, 106, 191)",
-            "rgb(136, 185, 98)",
-            "rgba(75, 192, 192, 0.6)",
-            "rgba(153, 102, 255, 0.6)",
-            ],
-            borderWidth: 1,
-        },
+            {
+                data: data,
+                backgroundColor: [
+                    "rgb(250, 141, 116)",
+                    "rgb(0, 121, 211)",
+                    "rgb(196, 106, 191)",
+                    "rgb(136, 185, 98)",
+                    "rgba(75, 192, 192, 0.6)",
+                    "rgba(153, 102, 255, 0.6)",
+                ],
+                borderWidth: 1,
+            },
         ],
     };
     const options = {

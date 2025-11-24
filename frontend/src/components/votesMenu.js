@@ -7,7 +7,7 @@ function VotesMenu() {
     return (
         <div className="Container-menu">
             <div className="Vote-menu">
-                <img className="Vote-icon" src={Vote}></img>
+                <img className="Vote-icon" src={Vote} alt='Icon'></img>
                 <button className="Button-menu" onClick={ () =>
                     navigate('/votesystem/votemenu')
                 }><Date></Date></button>

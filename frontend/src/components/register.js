@@ -61,7 +61,7 @@ function Register() {
                         />
                         <img
                             className='Visibility-icon'
-                            src={visibilityState ? ViewOff : View}
+                            src={visibilityState ? ViewOff : View} alt='Icon'
                             onClick={() => setVisibilityState(!visibilityState)}
                         />
                     </div>

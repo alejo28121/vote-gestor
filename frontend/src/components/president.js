@@ -28,7 +28,7 @@ function President(){
                 },
                 body: JSON.stringify(datesValue)
             });
-            if(response.status == 200){
+            if(response.status === 200){
                 setSelect(0);
                 setErrorValue("");
             }else{
@@ -55,7 +55,7 @@ function President(){
                 <Loading></Loading>
                 ) : (
                 <div className='presidents'>
-                    <div className={`Vote-menu-${select == 1 ? 's' : 'p'}`} onClick={(e) => {
+                    <div className={`Vote-menu-${select === 1 ? 's' : 'p'}`} onClick={(e) => {
                                 setdatesValue({
                                     ...datesValue,
                                     candidate: 'DANIEL QUINTERO CALLE'
@@ -65,11 +65,11 @@ function President(){
                         }>
                         <span className='Candidate-number'>Candidato #1</span>
                         <div className='Back-candidate'>
-                            <img className='Img-candidate' src={Daniel}></img>
+                            <img className='Img-candidate' src={Daniel} alt='Candidate'></img>
                         </div>
                         <span className='Candidate-name'>DANIEL QUINTERO CALLE</span>
                     </div>
-                    <div className={`Vote-menu-${select == 2 ? 's' : 'p'}`} onClick={(e) => {
+                    <div className={`Vote-menu-${select === 2 ? 's' : 'p'}`} onClick={(e) => {
                                 setdatesValue({
                                     ...datesValue,
                                     candidate: 'DIANA CAROLINA CORCHO MEJIA'
@@ -79,11 +79,11 @@ function President(){
                         }>
                         <span className='Candidate-number'>Candidata #2</span>
                         <div className='Back-candidate'>
-                            <img className='Img-candidate' src={Diana}></img>
+                            <img className='Img-candidate' src={Diana} alt='Candidate'></img>
                         </div>
                         <span className='Candidate-name'>DIANA CAROLINA CORCHO MEJIA</span>
                     </div>
-                    <div className={`Vote-menu-${select == 3 ? 's' : 'p'}`} onClick={(e) => {
+                    <div className={`Vote-menu-${select === 3 ? 's' : 'p'}`} onClick={(e) => {
                                 setdatesValue({
                                     ...datesValue,
                                     candidate: 'IVAN CEPEDA CASTRO'
@@ -93,7 +93,7 @@ function President(){
                         }>
                         <span className='Candidate-number'>Candidato #3</span>
                         <div className='Back-candidate'>
-                            <img className='Img-candidate' src={Ivan}></img>
+                            <img className='Img-candidate' src={Ivan} alt='Candidate'></img>
                         </div>
                         <span className='Candidate-name'>IVAN CEPEDA CASTRO</span>
                     </div>
@@ -102,7 +102,7 @@ function President(){
             <div className='Container-send-vote'>
                 <span className='Error'>{errorValue}</span>
                 <button className='Button-send' onClick={() => { 
-                    if(select != 0){
+                    if(select !== 0){
                         SendDates()
                     }
                 }}>Votar</button>
