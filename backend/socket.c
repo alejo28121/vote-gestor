@@ -35,29 +35,36 @@ void VotesToJSON() {
         cJSON_AddItemToObject(root, "votes", array);
         fgets(linea, sizeof(linea), f);
 
-        while (fgets(linea, sizeof(linea), f)) {
+                while (fgets(linea, sizeof(linea), f)) {
             trim(linea);
 
             char candidate[100] = {0};
             char votesStr[20] = {0};
 
-            int i = 0, j = 0, k = 0;
-            int separador = 0;
+            int col = 0;
+            int i = 0, j = 0;
+            int posCandidate = 0;
+            int posVotes = 0;
 
             while (linea[i] != '\0') {
                 if (linea[i] == ',') {
-                    separador = 1;
+                    col++;
                     i++;
                     continue;
                 }
-                if (!separador)
+
+                if (col == 0)       // candidate
                     candidate[j++] = linea[i];
-                else
-                    votesStr[k++] = linea[i];
+
+                if (col == 1) {     // votes
+                    votesStr[posVotes++] = linea[i];
+                }
+
                 i++;
             }
+
             candidate[j] = '\0';
-            votesStr[k] = '\0';
+            votesStr[posVotes] = '\0';
 
             int votes = atoi(votesStr);
 
@@ -66,6 +73,7 @@ void VotesToJSON() {
             cJSON_AddNumberToObject(obj, "votes", votes);
             cJSON_AddItemToArray(array, obj);
         }
+
 
         fclose(f);
 

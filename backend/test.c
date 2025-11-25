@@ -3,6 +3,128 @@
 #include <string.h>
 #include "cJSON.h"
 
+
+void EliminarCandidato(cJSON *root) {
+
+    cJSON *candidateItem = cJSON_GetObjectItem(root, "candidate");
+    if (!candidateItem || !candidateItem->valuestring) {
+        printf("{\"status\":\"error\",\"msg\":\"Campo 'candidate' no encontrado\"}");
+        return;
+    }
+
+    char *nombreBuscar = candidateItem->valuestring;
+
+    FILE *f = fopen("Votes.csv", "r");
+    FILE *temp = fopen("temp.csv", "w");
+
+    char linea[300];
+    int encontrado = 0;
+
+    if (!f || !temp) {
+        printf("{\"status\":\"error\",\"msg\":\"No se pudo abrir Votes.csv\"}");
+        return;
+    }
+
+    fgets(linea, sizeof(linea), f);
+    fprintf(temp, "%s", linea);
+
+    while (fgets(linea, sizeof(linea), f)) {
+
+        char candidate[120] = {0};
+        int i = 0, j = 0;
+
+        while (linea[i] != '\0' && linea[i] != ',' && linea[i] != '\n') {
+            candidate[j++] = linea[i++];
+        }
+        candidate[j] = '\0';
+
+        if (strcmp(candidate, nombreBuscar) == 0) {
+            encontrado = 1;
+            continue;
+        }
+
+        fprintf(temp, "%s", linea);
+    }
+
+    fclose(f);
+    fclose(temp);
+
+    remove("Votes.csv");
+    rename("temp.csv", "Votes.csv");
+
+    cJSON *resp = cJSON_CreateObject();
+    cJSON_AddStringToObject(resp, "status", encontrado ? "ok" : "not_found");
+    cJSON_AddStringToObject(resp, "candidate", nombreBuscar);
+
+    char *out = cJSON_Print(resp);
+    printf("%s", out);
+
+    cJSON_free(out);
+    cJSON_Delete(resp);
+    cJSON_Delete(root);
+}
+
+void RegisUser(cJSON *root) {
+    cJSON *userItem = cJSON_GetObjectItem(root, "user");
+    cJSON *passItem = cJSON_GetObjectItem(root, "password");
+
+    if (!userItem || !passItem) return;
+
+    const char *id = userItem->valuestring;
+    const char *password = passItem->valuestring;
+
+    FILE *f = fopen("./users.csv", "r");
+    int exists = 0;
+
+    if (f) {
+        char line[256], uid[50], pass[50], roleFile[10], votedFile[10];
+
+        fgets(line, sizeof(line), f); // Skip header (user,password,role,voted)
+
+        while (fgets(line, sizeof(line), f)) {
+            line[strcspn(line, "\n")] = 0; // remove newline
+
+            // uid,pass,role,voted
+            if (sscanf(line, "%49[^,],%49[^,],%9[^,],%9s",
+                       uid, pass, roleFile, votedFile) == 4) {
+
+                if (strcmp(uid, id) == 0) {
+                    exists = 1;
+                    break;
+                }
+            }
+        }
+        fclose(f);
+    }
+
+    cJSON *resp = cJSON_CreateObject();
+
+    if (exists) {
+        cJSON_AddStringToObject(resp, "status", "error");
+        cJSON_AddStringToObject(resp, "message", "User already registered");
+    } else {
+        FILE *f2 = fopen("./users.csv", "a");
+
+        if (!f2) {
+            cJSON_AddStringToObject(resp, "status", "error");
+            cJSON_AddStringToObject(resp, "message", "Cannot open users.csv");
+        } else {
+            // user,password,role,voted
+            fprintf(f2, "%s,%s,2,no\n", id, password);
+            fclose(f2);
+
+            cJSON_AddStringToObject(resp, "status", "ok");
+            cJSON_AddStringToObject(resp, "message", "User registered");
+            cJSON_AddStringToObject(resp, "user", id);
+        }
+    }
+
+    char *json = cJSON_Print(resp);
+    printf("%s", json);
+    cJSON_free(json);
+    cJSON_Delete(resp);
+}
+
 void trim(char *s) {
     int i = strlen(s) - 1;
     while (i >= 0 && (s[i] == ' ' || s[i] == '\r' || s[i] == '\n'))
@@ -81,27 +203,46 @@ void RegisVotesCamara(cJSON *root) {
     cJSON_Delete(root);
 }
 
-void RegisUser(cJSON *root) {
-    cJSON *userItem = cJSON_GetObjectItem(root, "user");
-    cJSON *passItem = cJSON_GetObjectItem(root, "password");
+void RegisCandidate(cJSON *root) {
 
-    if (!userItem || !passItem) return;
+    cJSON *tipoItem = cJSON_GetObjectItem(root, "tipo");
+    cJSON *nameItem = cJSON_GetObjectItem(root, "name");
+    cJSON *imgItem  = cJSON_GetObjectItem(root, "img");
 
-    const char *id = userItem->valuestring;
-    const char *password = passItem->valuestring;
+    if (!tipoItem || !nameItem || !imgItem) {
+        printf("ERROR: Faltan datos en el JSON\n");
+        return;
+    }
 
-    FILE *f = fopen("./users.csv", "r");
+    if (!cJSON_IsString(tipoItem) || 
+        !cJSON_IsString(nameItem) || 
+        !cJSON_IsString(imgItem)) {
+
+        printf("ERROR: Datos invalidos\n");
+        return;
+    }
+
+    const char *tipo = tipoItem->valuestring;
+    const char *name = nameItem->valuestring;
+    const char *img  = imgItem->valuestring;
+
+    FILE *f = fopen("./Votes.csv", "r");
     int exists = 0;
 
     if (f) {
-        char line[256], uid[50], pass[50], roleFile[10], votedFile[10];
+        char line[300], candidateFile[150], tipoFile[20], imgFile[100];
+        int votesFile;
 
-        fgets(line, sizeof(line), f); // Skip header
+        fgets(line, sizeof(line), f); // Saltar encabezado
 
         while (fgets(line, sizeof(line), f)) {
-            line[strcspn(line, "\n")] = 0;
-            if (sscanf(line, "%49[^,],%49[^,],%9[^,],%9s", uid, pass, roleFile, votedFile) == 4) {
-                if (strcmp(uid, id) == 0) {
+
+            line[strcspn(line, "\n")] = 0; // quitar \n
+
+            // candidate,tipo,votes,img
+            if (sscanf(line, "%149[^,],%d,%19[^,],%99[^,]", candidateFile, &votesFile, tipoFile, imgFile) == 4) {
+
+                if (strcmp(candidateFile, name) == 0) {
                     exists = 1;
                     break;
                 }
@@ -114,18 +255,20 @@ void RegisUser(cJSON *root) {
 
     if (exists) {
         cJSON_AddStringToObject(resp, "status", "error");
-        cJSON_AddStringToObject(resp, "message", "User already registered");
+        cJSON_AddStringToObject(resp, "message", "Candidate already exists");
     } else {
-        FILE *f2 = fopen("./users.csv", "a");
+        FILE *f2 = fopen("./Votes.csv", "a");
         if (!f2) {
             cJSON_AddStringToObject(resp, "status", "error");
-            cJSON_AddStringToObject(resp, "message", "Cannot open users.csv");
+            cJSON_AddStringToObject(resp, "message", "Cannot open Votes.csv");
         } else {
-            fprintf(f2, "%s,%s,2,no\n", id, password);
+            // candidate,tipo,votes,img
+            fprintf(f2, "%s,0,%s,%s\n", name, tipo, img);
             fclose(f2);
 
             cJSON_AddStringToObject(resp, "status", "ok");
-            cJSON_AddStringToObject(resp, "message", "User registered");
+            cJSON_AddStringToObject(resp, "message", "Candidate registered");
+            cJSON_AddStringToObject(resp, "candidate", name);
         }
     }
 
@@ -134,6 +277,7 @@ void RegisUser(cJSON *root) {
     cJSON_free(json);
     cJSON_Delete(resp);
 }
+
 
 void ValidateUser(cJSON *root) {
     char userDb[50], pass[50], rol[20], voto[10];
@@ -279,8 +423,7 @@ void ValidateVote(cJSON *root) {
     while (fgets(line, sizeof(line), f)) {
         line[strcspn(line, "\n")] = 0;
 
-        if (sscanf(line, "%49[^,],%49[^,],%9[^,],%9s",
-                   userDb, pass, rol, voted) == 4) {
+        if (sscanf(line, "%49[^,],%49[^,],%9[^,],%9s", userDb, pass, rol, voted) == 4) {
 
             if (strcmp(userDb, user) == 0) {
                 found = 1;
@@ -335,10 +478,12 @@ int main() {
         RegisVotesCamara(root);
     } else if (strcmp(functionValue, "RegisUser") == 0) {
         RegisUser(root);
-    }
-     else if (strcmp(functionValue, "ValidateVote") == 0) {
+    } else if (strcmp(functionValue, "ValidateVote") == 0) {
         ValidateVote(root);
+    } else if (strcmp(functionValue, "RegisCandidate") == 0) {
+        RegisCandidate(root);
+    } else if (strcmp(functionValue, "EliminarCandidato") == 0) {
+        EliminarCandidato(root);
     }
-
     return 0;
 }

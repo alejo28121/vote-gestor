@@ -3,6 +3,7 @@ import '../assets/styles/admin.css';
 import PieChart from './circular';
 import BarChart from './Bar';
 import EditCandidates from './editcandidates'
+import { Outlet } from 'react-router-dom';
 
 function Dashboard() {
     const [votes, setVotes] = useState({}); 
@@ -81,6 +82,7 @@ function Dashboard() {
                 </div>
                 <EditCandidates candidates={votes}></EditCandidates>
             </div>
+            <Outlet/>
         </div>
     );
 }

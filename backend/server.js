@@ -84,9 +84,32 @@ app.post("/regisvote", async (req, res) => {
         res.status(500).json({ error: err });
     }
 });
+app.post("/regiscandidate", async (req, res) => {
+    console.log("BODY RECIBIDO PARA REGISTRAR VOTO:", req.body);
+
+    try {
+        const result = JSON.parse(
+        await runCprogram("./test.exe", {
+            ...req.body,
+            function: "RegisCandidate",
+        })
+        );
+
+        console.log("RESPUESTA REGIS VOTE:", result);
+
+        if (result.status === "ok") {
+        res.status(200).json(result);
+        } else {
+        res.status(401).json(result);
+        }
+    } catch (err) {
+        console.error(" ERROR EN /regisvote:", err);
+        res.status(500).json({ error: err });
+    }
+});
 
 app.post("/validatevote", async (req, res) => {
-    console.log("📥 BODY RECIBIDO PARA VALIDAR VOTO:", req.body);
+    console.log("BODY RECIBIDO PARA VALIDAR VOTO:", req.body);
 
     try {
         const result = JSON.parse(
@@ -96,7 +119,7 @@ app.post("/validatevote", async (req, res) => {
         })
         );
 
-        console.log("📤 RESPUESTA VALIDATE VOTE:", result);
+        console.log("RESPUESTA VALIDATE VOTE:", result);
 
         if (result.status === "ok") {
         res.status(200).json(result);
@@ -105,6 +128,29 @@ app.post("/validatevote", async (req, res) => {
         }
     } catch (err) {
         console.error(" ERROR EN /validatevote:", err);
+        res.status(500).json({ error: err });
+    }
+});
+app.post("/deletecandidate", async (req, res) => {
+    console.log("BODY RECIBIDO PARA VALIDAR VOTO:", req.body);
+
+    try {
+        const result = JSON.parse(
+        await runCprogram("./test.exe", {
+            ...req.body,
+            function: "EliminarCandidato",
+        })
+        );
+
+        console.log("RESPUESTA VALIDATE VOTE:", result);
+
+        if (result.status === "ok") {
+        res.status(200).json(result);
+        } else {
+        res.status(401).json(result);
+        }
+    } catch (err) {
+        console.error(" ERROR EN /EliminarCandidato:", err);
         res.status(500).json({ error: err });
     }
 });

@@ -1,0 +1,22 @@
+.Main-add-container{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 200;
+}
+.Add-container{
+    width: 25vw;
+    height: 40vh;
+    border-radius: 2vh;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+    border: solid #fa8d74;
+    background-color: #fffdf7;
+}

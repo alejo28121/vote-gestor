@@ -4,10 +4,12 @@ import Edit from '../assets/icons/edit.svg'
 import Delete from '../assets/icons/delete.svg'
 import Add from '../assets/icons/add.svg'
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Candidates({candidates}) {
     const [listValue, setListValue] = useState(0);
     const [edit, setEdit] = useState(false);
+    const navigate = useNavigate();
     return (
         <div className="list-votes">
             <h2 className="Vote-title">Candidatos</h2>
@@ -31,9 +33,11 @@ function Candidates({candidates}) {
                         <div className='Buttons-container'>
                             <img className={`Edit-icon${edit ? '-c' : ''}`} src={Edit} onClick={() => 
                                 setEdit(true)
-                            }></img>
+                            }></img> 
                             <img className={`Delete-icon${edit ? '-c' : ''}`} src={Delete}></img>
-                            <img className={`Add-icon${edit ? '-c' : ''}`} src={Add}></img>                            
+                            <img className={`Add-icon${edit ? '-c' : ''}`} src={Add} onClick={() =>
+                                navigate('/votesystem/dashboard/addcandidates')
+                            }></img>                            
                         </div>
                         <div className={`Buttons-sucess${edit ? '-c' : ''}`}>
                             <button className='Save-button' onClick={() => 
