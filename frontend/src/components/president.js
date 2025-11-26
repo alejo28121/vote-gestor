@@ -28,7 +28,7 @@ function President(){
         default: Default,
     };
     useEffect(() => {
-        const ws = new WebSocket("ws://localhost:8080/socket");
+        const ws = new WebSocket("ws://52.87.177.138:8080/socket");
         socketRef.current = ws;
     
         ws.onopen = () => {
