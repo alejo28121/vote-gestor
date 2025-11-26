@@ -1,30 +1,30 @@
 {
   "files": {
-    "main.css": "/static/css/main.b8ee25c0.css",
-    "main.js": "/static/js/main.d9a21e55.js",
-    "static/js/453.95e14056.chunk.js": "/static/js/453.95e14056.chunk.js",
-    "static/media/Diana.svg": "/static/media/Diana.0c7e4de24ab8894bad9236695725d01c.svg",
-    "static/media/Ivan.svg": "/static/media/Ivan.7a09fb47319a750dceb87024eb620f19.svg",
-    "static/media/Daniel.svg": "/static/media/Daniel.d08edc1bf3f279afdb873f2156a33c67.svg",
-    "static/media/admin.svg": "/static/media/admin.5fb2bba1a0d3e9801f8b986cb692c434.svg",
-    "static/media/senado.svg": "/static/media/senado.7a232063bb444492b60cf2c047535f04.svg",
-    "static/media/visibility_off.svg": "/static/media/visibility_off.ea6a91a968794b565431eb4f02c266d2.svg",
-    "static/media/camara.svg": "/static/media/camara.5ba4d99db4cc0376db168ec99dd3d4fa.svg",
-    "index.html": "/index.html",
-    "static/media/visibility.svg": "/static/media/visibility.84f14a9e89e2577cb5f21b359e91d16f.svg",
-    "static/media/president.svg": "/static/media/president.b278c20bf35ec3ff843d31e6a1ed25ae.svg",
-    "static/media/vote.svg": "/static/media/vote.0b815b7b2bbc993b8c97df02049c91a7.svg",
-    "static/media/edit.svg": "/static/media/edit.7d2dc7af6fbdaebfc73195b1c3b34675.svg",
-    "static/media/delete.svg": "/static/media/delete.e9e57f77a42839375632f9b241aa2a22.svg",
-    "static/media/logout.svg": "/static/media/logout.b918b9c522b3b7676158679c7c0a8b84.svg",
-    "static/media/add.svg": "/static/media/add.1349ffcb14a0fd6ae8a1ec308a426e04.svg",
-    "static/media/drop.svg": "/static/media/drop.05f4198e916ce3a8ee4201754e184eb8.svg",
-    "main.b8ee25c0.css.map": "/static/css/main.b8ee25c0.css.map",
-    "main.d9a21e55.js.map": "/static/js/main.d9a21e55.js.map",
-    "453.95e14056.chunk.js.map": "/static/js/453.95e14056.chunk.js.map"
+    "main.css": "./static/css/main.b8ee25c0.css",
+    "main.js": "./static/js/main.191e2ef3.js",
+    "static/js/453.95e14056.chunk.js": "./static/js/453.95e14056.chunk.js",
+    "static/media/Diana.svg": "./static/media/Diana.0c7e4de24ab8894bad9236695725d01c.svg",
+    "static/media/Ivan.svg": "./static/media/Ivan.7a09fb47319a750dceb87024eb620f19.svg",
+    "static/media/Daniel.svg": "./static/media/Daniel.d08edc1bf3f279afdb873f2156a33c67.svg",
+    "static/media/admin.svg": "./static/media/admin.5fb2bba1a0d3e9801f8b986cb692c434.svg",
+    "static/media/senado.svg": "./static/media/senado.7a232063bb444492b60cf2c047535f04.svg",
+    "static/media/visibility_off.svg": "./static/media/visibility_off.ea6a91a968794b565431eb4f02c266d2.svg",
+    "static/media/camara.svg": "./static/media/camara.5ba4d99db4cc0376db168ec99dd3d4fa.svg",
+    "index.html": "./index.html",
+    "static/media/visibility.svg": "./static/media/visibility.84f14a9e89e2577cb5f21b359e91d16f.svg",
+    "static/media/president.svg": "./static/media/president.b278c20bf35ec3ff843d31e6a1ed25ae.svg",
+    "static/media/vote.svg": "./static/media/vote.0b815b7b2bbc993b8c97df02049c91a7.svg",
+    "static/media/edit.svg": "./static/media/edit.7d2dc7af6fbdaebfc73195b1c3b34675.svg",
+    "static/media/delete.svg": "./static/media/delete.e9e57f77a42839375632f9b241aa2a22.svg",
+    "static/media/logout.svg": "./static/media/logout.b918b9c522b3b7676158679c7c0a8b84.svg",
+    "static/media/add.svg": "./static/media/add.1349ffcb14a0fd6ae8a1ec308a426e04.svg",
+    "static/media/drop.svg": "./static/media/drop.05f4198e916ce3a8ee4201754e184eb8.svg",
+    "main.b8ee25c0.css.map": "./static/css/main.b8ee25c0.css.map",
+    "main.191e2ef3.js.map": "./static/js/main.191e2ef3.js.map",
+    "453.95e14056.chunk.js.map": "./static/js/453.95e14056.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b8ee25c0.css",
-    "static/js/main.d9a21e55.js"
+    "static/js/main.191e2ef3.js"
   ]
 }
