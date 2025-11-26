@@ -353,18 +353,20 @@ void RegisVotes(cJSON *root) {
     char line[256];
     int found = 0;
 
-    fprintf(temp, "candidate,votes\n");
-    fgets(line, sizeof(line), f); // Skip header
+    fprintf(temp, "candidate,votes,tipo,img\n");
+    fgets(line, sizeof(line), f); 
 
     while (fgets(line, sizeof(line), f)) {
         trim(line);
 
-        char candidateA[128], votesStr[64];
-        int votes;
+        char candidateA[128] = {0}, votesStr[32] = {0}, tipoStr[16] = {0}, img[64] = {0};
+        int votes, tipo;
 
-        if (sscanf(line, "%127[^,],%63[^\n]", candidateA, votesStr) == 2) {
+        if (sscanf(line, "%127[^,],%31[^,],%15[^,],%63[^\n]", candidateA, votesStr, tipoStr, img) == 4) {
             trim(candidateA);
             trim(votesStr);
+            trim(tipoStr);
+            trim(img);
 
             if (strcmp(candidateA, candidate) == 0) {
                 votes = atoi(votesStr) + 1;
@@ -373,12 +375,14 @@ void RegisVotes(cJSON *root) {
                 votes = atoi(votesStr);
             }
 
-            fprintf(temp, "%s,%d\n", candidateA, votes);
+            tipo = atoi(tipoStr);
+
+            fprintf(temp, "%s,%d,%d,%s\n", candidateA, votes, tipo, img);
         }
     }
 
     if (!found) {
-        fprintf(temp, "%s,1\n", candidate);
+        fprintf(temp, "%s,1,1,default.svg\n", candidate);
     }
 
     fclose(f);
@@ -400,6 +404,7 @@ void RegisVotes(cJSON *root) {
     cJSON_Delete(resp);
     cJSON_Delete(root);
 }
+
 
 void ValidateVote(cJSON *root) {
     cJSON *userItem = cJSON_GetObjectItem(root, "user");

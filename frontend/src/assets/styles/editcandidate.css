@@ -10,7 +10,7 @@
     top: 0;
     backdrop-filter: blur(10px);
     background-color: rgba(0, 0, 0, 0.3);
-    z-index: 200;
+    z-index: 400;
 }
 .Add-container{
     width: 25vw;
@@ -19,4 +19,28 @@
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
     border: solid #fa8d74;
     background-color: #fffdf7;
+}
+.Input-name,
+.List-add{
+    width: 20vw;
+    height: 5vh;
+    border: none;
+    background-color: #dddbd5;
+    border-radius: 2vh;
+    padding: 1vh;
+    margin: 1vh;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.Add-button{
+    width: 10vw;
+    height: 5vh;
+    border: none;
+    color: #dddbd5;
+    background-color: #fa8d74;
+    border-radius: 2vh;
+    padding: 1vh;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-weight: 700;
 }

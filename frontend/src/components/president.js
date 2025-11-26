@@ -1,21 +1,65 @@
 import Daniel from '../assets/images/Daniel.svg'
 import Ivan from '../assets/images/Ivan.svg'
 import Diana from '../assets/images/Diana.svg'
+import Default from "../assets/icons/president.svg"
 import Loading from './loading';
-import { useState } from 'react';
-import {useNavigate} from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import {useNavigate, useLocation  } from 'react-router-dom';
 
 function President(){
     const info = JSON.parse(localStorage.getItem('info'));
+    const [votes, setVotes] = useState([]); 
+    const socketRef = useRef(null);
     const [select, setSelect] = useState(0);
     const [loading, setLoading] = useState(false);
     const [errorValue, setErrorValue] = useState("");
+    const location = useLocation();
     const navigate = useNavigate();
+    const mode = location.state?.mode || 1;
     const [datesValue, setdatesValue] = useState({
         function : 'RegisVotes',
         candidate: '',
         user: info.user,
     }); 
+    const images = {
+        Diana,
+        Daniel,
+        Ivan,
+        default: Default,
+    };
+    useEffect(() => {
+        const ws = new WebSocket("ws://localhost:8080/socket");
+        socketRef.current = ws;
+    
+        ws.onopen = () => {
+            console.log("Conectado al WebSocket");
+        };
+    
+        ws.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                if (data.votes) { 
+                    setVotes(data.votes);
+                }
+            } catch {
+                console.log("Mensaje no JSON:", event.data);
+            }
+        };
+    
+        ws.onclose = () => {
+            console.log("WebSocket cerrado");
+        };
+    
+        ws.onerror = (err) => {
+            console.error("WebSocket error:", err);
+        };
+    
+        return () => {
+            if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
+                ws.close();
+            }
+        };
+    }, []);
     const SendDates = async () => {
         const MIN_TIME = 2000; 
         const start = Date.now();
@@ -49,54 +93,29 @@ function President(){
             }
         }
     }
+    console.log(votes.filter(item => item.tipo === mode));
     return(
         <div className="Container-menu-p">
             {loading ? (
                 <Loading></Loading>
                 ) : (
                 <div className='presidents'>
-                    <div className={`Vote-menu-${select === 1 ? 's' : 'p'}`} onClick={(e) => {
+                    {votes.filter(item => item.tipo === mode).map((item, index) => (
+                        <div key={item.candidate} className={`Vote-menu-${select === index + 1 ? 's' : 'p'}`} onClick={(e) => {
                                 setdatesValue({
                                     ...datesValue,
-                                    candidate: 'DANIEL QUINTERO CALLE'
+                                    candidate: item.candidate
                                 })
-                                setSelect(1)
+                                setSelect(index + 1)
                             }
-                        }>
-                        <span className='Candidate-number'>Candidato #1</span>
-                        <div className='Back-candidate'>
-                            <img className='Img-candidate' src={Daniel} alt='Candidate'></img>
+                            }>
+                            <span className='Candidate-number'>Candidato #{index + 1}</span>
+                            <div className='Back-candidate'>
+                                <img className='Img-candidate' src={images[item.img]} alt='Candidate'></img>
+                            </div>
+                            <span className='Candidate-name'>{item.candidate}</span>
                         </div>
-                        <span className='Candidate-name'>DANIEL QUINTERO CALLE</span>
-                    </div>
-                    <div className={`Vote-menu-${select === 2 ? 's' : 'p'}`} onClick={(e) => {
-                                setdatesValue({
-                                    ...datesValue,
-                                    candidate: 'DIANA CAROLINA CORCHO MEJIA'
-                                })
-                                setSelect(2)
-                            }
-                        }>
-                        <span className='Candidate-number'>Candidata #2</span>
-                        <div className='Back-candidate'>
-                            <img className='Img-candidate' src={Diana} alt='Candidate'></img>
-                        </div>
-                        <span className='Candidate-name'>DIANA CAROLINA CORCHO MEJIA</span>
-                    </div>
-                    <div className={`Vote-menu-${select === 3 ? 's' : 'p'}`} onClick={(e) => {
-                                setdatesValue({
-                                    ...datesValue,
-                                    candidate: 'IVAN CEPEDA CASTRO'
-                                })
-                                setSelect(3)
-                            }
-                        }>
-                        <span className='Candidate-number'>Candidato #3</span>
-                        <div className='Back-candidate'>
-                            <img className='Img-candidate' src={Ivan} alt='Candidate'></img>
-                        </div>
-                        <span className='Candidate-name'>IVAN CEPEDA CASTRO</span>
-                    </div>
+                    ))}
                 </div>
                 )}
             <div className='Container-send-vote'>

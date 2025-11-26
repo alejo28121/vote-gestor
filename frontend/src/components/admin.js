@@ -3,13 +3,15 @@ import '../assets/styles/admin.css';
 import PieChart from './circular';
 import BarChart from './Bar';
 import EditCandidates from './editcandidates'
+import VoteCandidates from './votescandidates'
 import { Outlet } from 'react-router-dom';
+import Candidates from './editcandidates';
 
 function Dashboard() {
-    const [votes, setVotes] = useState({}); 
+    const [votes, setVotes] = useState([]); 
     const [diagram, setDiagram] = useState("1");
+    const [candidate, setCandidate] = useState("1");
     const socketRef = useRef(null);
-
     useEffect(() => {
         const ws = new WebSocket("ws://localhost:8080/socket");
         socketRef.current = ws;
@@ -22,13 +24,7 @@ function Dashboard() {
             try {
                 const data = JSON.parse(event.data);
                 if (data.votes) { 
-                    setVotes(prev => {
-                        const newVotes = { ...prev };
-                        data.votes.forEach(item => {
-                            newVotes[item.candidate] = item.votes; 
-                        });
-                        return newVotes;
-                    });
+                    setVotes(data.votes);
                 }
             } catch {
                 console.log("Mensaje no JSON:", event.data);
@@ -49,17 +45,11 @@ function Dashboard() {
             }
         };
     }, []);
+    console.log(candidate === "2" ? votes.filter(item => item.tipo === 2).map(v => v.votes) : '')
     return (
         <div className='Main-dashboard'>
             <div className='Items-container'>
-                <div className='list-votes'>
-                    <h2 className='Vote-title'>Votos por candidato</h2>
-                        {Object.entries(votes).map(([candidate, count]) => (
-                            <p className='Votes-text' key={candidate}>
-                                {candidate}: {count} votos
-                            </p>
-                        ))}
-                </div>
+                <VoteCandidates candidates={votes}></VoteCandidates>
                 <div className='list-votes'>
                     <h2 className='Vote-title'>Diagrama</h2>
                     <div className='List-container'>
@@ -67,18 +57,23 @@ function Dashboard() {
                             <option value={"1"}>Diagrama de torta</option>
                             <option value={"2"}>Diagrama de barras</option>
                         </select>
+                        <select className='List' onChange={(e) => setCandidate(e.target.value)}>
+                            <option value={"1"}>Presidencia</option>
+                            <option value={"3"}>Concejo</option>
+                            <option value={"2"}>Camara</option>
+                        </select>
                     </div>
                     {diagram === "1" ? (
-                        <PieChart
-                            labels={Object.keys(votes)} 
-                            data={Object.values(votes)} 
+                        <PieChart 
+                            labels={votes.filter(item => item.tipo === parseInt(candidate)).map(v => v.candidate)}
+                            data={votes.filter(item => item.tipo === parseInt(candidate)).map(v => v.votes)}
                         />
                         ) : (
                         <BarChart
-                            labels={Object.keys(votes)} 
-                            data={Object.values(votes)} 
+                            labels={votes.filter(item => item.tipo === parseInt(candidate)).map(v => v.candidate)}
+                            data={votes.filter(item => item.tipo === parseInt(candidate)).map(v => v.votes)}
                         />
-                    )}
+                        )}
                 </div>
                 <EditCandidates candidates={votes}></EditCandidates>
             </div>

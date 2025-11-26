@@ -6,7 +6,7 @@ function AddCandidates(){
     const [formValues, setFormValues] = useState({
         tipo: '',
         name: '',
-        img : 'default.svg'
+        img : 'default'
     });
     const navigate = useNavigate();
     const handleSubmit = async (e) => {
@@ -60,7 +60,7 @@ function AddCandidates(){
                     </select>
                 </div>
                 <div className='Buttons-container'>
-                    <button className='Add-button' onClick={handleSubmit}>Agregar</button>
+                    <button disabled={formValues.tipo === '' || formValues.name === ''} className='Add-button' onClick={handleSubmit}>Agregar</button>
                 </div>
             </div>
         </div>

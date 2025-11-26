@@ -21,6 +21,8 @@ function App() {
               <Route path='principalmenu' element={<VotesMenu/>}/>
               <Route path='votemenu' element={<VotesMenuTwo/>}/>
               <Route path='president' element={<President/>}/>
+              <Route path='senado' element={<President/>}/>
+              <Route path='camara' element={<President/>}/>
               <Route path='dashboard/' element={<Dashboard/>}>
                 <Route path='addcandidates' element={<AddCandidates/>}/>
               </Route>

@@ -12,7 +12,8 @@
     align-items: center;
     grid-template-columns: repeat(2, 1fr);
 }
-.list-votes{
+.list-votes,
+.list-votes-2{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -24,6 +25,9 @@
     border-radius: 2vh;
     padding: 2vh;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+.list-votes-2{
+    z-index: 300;
 }
 .Votes-text{
     font-size: 2vh;
@@ -64,4 +68,5 @@
     border: solid #fa8d74;
     background-color: transparent;
     font-weight: 540;
+    margin: 2vh;
 }

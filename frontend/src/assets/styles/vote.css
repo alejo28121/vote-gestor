@@ -145,7 +145,8 @@
     background-color: #fffdf7;
     border-radius: 2vh;
 }
-.Img-candidate{
+.Img-candidate,
+.Default-container{
     width: 8vw;
     filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.4));
     border-radius: 2vh;

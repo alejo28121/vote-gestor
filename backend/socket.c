@@ -33,18 +33,23 @@ void VotesToJSON() {
         cJSON *root = cJSON_CreateObject();
         cJSON *array = cJSON_CreateArray();
         cJSON_AddItemToObject(root, "votes", array);
+
         fgets(linea, sizeof(linea), f);
 
-                while (fgets(linea, sizeof(linea), f)) {
+        while (fgets(linea, sizeof(linea), f)) {
             trim(linea);
 
             char candidate[100] = {0};
             char votesStr[20] = {0};
+            char tipoStr[20] = {0};
+            char imagen[50] = {0};
 
             int col = 0;
-            int i = 0, j = 0;
+            int i = 0;
             int posCandidate = 0;
             int posVotes = 0;
+            int posTipo = 0;
+            int posImg = 0;
 
             while (linea[i] != '\0') {
                 if (linea[i] == ',') {
@@ -53,33 +58,40 @@ void VotesToJSON() {
                     continue;
                 }
 
-                if (col == 0)       // candidate
-                    candidate[j++] = linea[i];
-
-                if (col == 1) {     // votes
+                if (col == 0) {  // candidate
+                    candidate[posCandidate++] = linea[i];
+                } 
+                else if (col == 1) { // votes
                     votesStr[posVotes++] = linea[i];
+                } 
+                else if (col == 2) { // tipo
+                    tipoStr[posTipo++] = linea[i];
                 }
-
+                else if (col == 3) { // img
+                    imagen[posImg++] = linea[i];
+                }
                 i++;
             }
-
-            candidate[j] = '\0';
+            candidate[posCandidate] = '\0';
             votesStr[posVotes] = '\0';
+            tipoStr[posTipo] = '\0';
+            imagen[posImg] = '\0';
 
             int votes = atoi(votesStr);
-
+            int tipo = atoi(tipoStr);
             cJSON *obj = cJSON_CreateObject();
             cJSON_AddStringToObject(obj, "candidate", candidate);
             cJSON_AddNumberToObject(obj, "votes", votes);
+            cJSON_AddNumberToObject(obj, "tipo", tipo);
+            cJSON_AddStringToObject(obj, "img", imagen);
             cJSON_AddItemToArray(array, obj);
         }
 
-
         fclose(f);
 
-        char *json = cJSON_PrintUnformatted(root); 
+        char *json = cJSON_PrintUnformatted(root);
         printf("%s\n", json);
-        fflush(stdout); 
+        fflush(stdout);
 
         free(json);
         cJSON_Delete(root);
@@ -94,5 +106,5 @@ void VotesToJSON() {
 
 int main() {
     VotesToJSON();
-    return 0; 
+    return 0;
 }
