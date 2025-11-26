@@ -17,7 +17,7 @@ void trim(char *s) {
 
 void VotesToJSON() {
     while (1) {
-        FILE *f = fopen("Votes.csv", "r");
+        FILE *f = fopen("/home/ec2-user/votemanager/backend/Votes.csv", "r");
         if (!f) {
             fprintf(stderr, "{\"error\": \"No se pudo abrir Votes.csv\"}\n");
 #ifdef _WIN32
