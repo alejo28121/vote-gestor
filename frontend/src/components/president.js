@@ -29,7 +29,7 @@ function President(){
         default: Default,
     };
     useEffect(() => {
-        const ws = new WebSocket("ws://52.87.177.138:8080/socket");
+        const ws = new WebSocket("wss://votesocket.syncedu.lat/socket");
         socketRef.current = ws;
     
         ws.onopen = () => {
