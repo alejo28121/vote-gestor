@@ -8,6 +8,9 @@
     justify-content: center;
     user-select: none;
 }
+.Text-departament{
+    font-size: 2vh;
+}
 .Form-login-container{
     width: 28vw;
     height: 70vh;

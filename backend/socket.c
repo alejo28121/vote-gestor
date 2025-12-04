@@ -17,7 +17,7 @@ void trim(char *s) {
 
 void VotesToJSON() {
     while (1) {
-        FILE *f = fopen("/home/ec2-user/votemanager/backend/Votes.csv", "r");
+        FILE *f = fopen("Votes.csv", "r");
         if (!f) {
             fprintf(stderr, "{\"error\": \"No se pudo abrir Votes.csv\"}\n");
 #ifdef _WIN32
@@ -43,6 +43,7 @@ void VotesToJSON() {
             char votesStr[20] = {0};
             char tipoStr[20] = {0};
             char imagen[50] = {0};
+            char zone[50] = {0};
 
             int col = 0;
             int i = 0;
@@ -50,6 +51,7 @@ void VotesToJSON() {
             int posVotes = 0;
             int posTipo = 0;
             int posImg = 0;
+            int posZone = 0;
 
             while (linea[i] != '\0') {
                 if (linea[i] == ',') {
@@ -70,12 +72,16 @@ void VotesToJSON() {
                 else if (col == 3) { // img
                     imagen[posImg++] = linea[i];
                 }
+                else if (col == 4) { // img
+                    zone[posZone++] = linea[i];
+                }
                 i++;
             }
             candidate[posCandidate] = '\0';
             votesStr[posVotes] = '\0';
             tipoStr[posTipo] = '\0';
             imagen[posImg] = '\0';
+            zone[posZone] = '\0';
 
             int votes = atoi(votesStr);
             int tipo = atoi(tipoStr);
@@ -84,6 +90,7 @@ void VotesToJSON() {
             cJSON_AddNumberToObject(obj, "votes", votes);
             cJSON_AddNumberToObject(obj, "tipo", tipo);
             cJSON_AddStringToObject(obj, "img", imagen);
+            cJSON_AddStringToObject(obj, "zone", zone);
             cJSON_AddItemToArray(array, obj);
         }
 

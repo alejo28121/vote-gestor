@@ -21,13 +21,13 @@ function VotesMenuTwo() {
                 <img className="Vote-icon" src={Senado} alt='Icon'></img>
                 <button className="Button-menu" onClick={() => 
                     navigate('/votesystem/senado', { state: { mode: 2 } })
-                }>Consulta Senado</button>
+                }>Consulta Camara</button>
             </div>
             <div className="Vote-menu">
                 <img className="Vote-icon" src={Camara} alt='Icon'></img>
                 <button className="Button-menu" onClick={() => 
                     navigate('/votesystem/camara', { state: { mode: 3 } })
-                }>Consulta Camara</button>
+                }>Consulta Concejo</button>
             </div>
             {rolValue === "1" ? (
                 <div className="Vote-menu">

@@ -1,0 +1,71 @@
+departamento,departamento_code,municipio,municipio_code
+Antioquia,ANT,Medellín,ANT-001
+Antioquia,ANT,Bello,ANT-002
+Antioquia,ANT,Itagüí,ANT-003
+Antioquia,ANT,Envigado,ANT-004
+Antioquia,ANT,Rionegro,ANT-005
+Antioquia,ANT,Apartadó,ANT-006
+Antioquia,ANT,Turbo,ANT-007
+Antioquia,ANT,La Ceja,ANT-008
+Antioquia,ANT,Caldas,ANT-009
+Antioquia,ANT,Sabaneta,ANT-010
+Valle del Cauca,VAC,Cali,VAC-001
+Valle del Cauca,VAC,Palmira,VAC-002
+Valle del Cauca,VAC,Buenaventura,VAC-003
+Valle del Cauca,VAC,Tuluá,VAC-004
+Valle del Cauca,VAC,Yumbo,VAC-005
+Valle del Cauca,VAC,Cartago,VAC-006
+Valle del Cauca,VAC,Buga,VAC-007
+Valle del Cauca,VAC,Jamundí,VAC-008
+Valle del Cauca,VAC,Zarzal,VAC-009
+Valle del Cauca,VAC,Andalucía,VAC-010
+Atlántico,ATL,Barranquilla,ATL-001
+Atlántico,ATL,Soledad,ATL-002
+Atlántico,ATL,Malambo,ATL-003
+Atlántico,ATL,Galapa,ATL-004
+Atlántico,ATL,Sabanagrande,ATL-005
+Atlántico,ATL,Sabanalarga,ATL-006
+Atlántico,ATL,Baranoa,ATL-007
+Atlántico,ATL,Puerto Colombia,ATL-008
+Atlántico,ATL,Ponedera,ATL-009
+Atlántico,ATL,Luruaco,ATL-010
+Santander,SAN,Bucaramanga,SAN-001
+Santander,SAN,Floridablanca,SAN-002
+Santander,SAN,Girón,SAN-003
+Santander,SAN,Piedecuesta,SAN-004
+Santander,SAN,Barrancabermeja,SAN-005
+Santander,SAN,San Gil,SAN-006
+Santander,SAN,Socorro,SAN-007
+Santander,SAN,Lebrija,SAN-008
+Santander,SAN,Rionegro,SAN-009
+Santander,SAN,Zapatoca,SAN-010
+Nariño,NAR,Pasto,NAR-001
+Nariño,NAR,Tumaco,NAR-002
+Nariño,NAR,Ipiales,NAR-003
+Nariño,NAR,Túquerres,NAR-004
+Nariño,NAR,Sandoná,NAR-005
+Nariño,NAR,La Unión,NAR-006
+Nariño,NAR,Barbacoas,NAR-007
+Nariño,NAR,El Tablón,NAR-008
+Nariño,NAR,Guachucal,NAR-009
+Nariño,NAR,Samaniego,NAR-010
+Huila,HUI,Neiva,HUI-001
+Huila,HUI,Pitalito,HUI-002
+Huila,HUI,Garzón,HUI-003
+Huila,HUI,La Plata,HUI-004
+Huila,HUI,Campoalegre,HUI-005
+Huila,HUI,Acevedo,HUI-006
+Huila,HUI,Suaza,HUI-007
+Huila,HUI,Isnos,HUI-008
+Huila,HUI,Tello,HUI-009
+Huila,HUI,Villavieja,HUI-010
+Risaralda,RIS,Pereira,RIS-001
+Risaralda,RIS,Dosquebradas,RIS-002
+Risaralda,RIS,Santa Rosa de Cabal,RIS-003
+Risaralda,RIS,La Virginia,RIS-004
+Risaralda,RIS,Apía,RIS-005
+Risaralda,RIS,Belén de Umbría,RIS-006
+Risaralda,RIS,Quinchía,RIS-007
+Risaralda,RIS,Marsella,RIS-008
+Risaralda,RIS,Mistrató,RIS-009
+Risaralda,RIS,Guática,RIS-010

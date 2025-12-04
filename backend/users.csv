@@ -1,3 +1,4 @@
-nombre,password,rol,voted
-1088270853,1234,1,no
-1058078717,4321,2,no
+nombre,password,rol,voted,zone,mu
+1088270853,1234,1,no,co,co
+1058078717,4321,2,no,RIS,RIS-001
+123456789,1234,2,no,RIS,RIS-010

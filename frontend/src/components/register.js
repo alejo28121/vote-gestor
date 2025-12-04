@@ -1,20 +1,44 @@
 import '../assets/styles/login.css'
 import View from '../assets/icons/visibility.svg'
 import ViewOff from '../assets/icons/visibility_off.svg'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Register() {
     const navigate = useNavigate();
     const [visibilityState, setVisibilityState] = useState(false);
+    const [dates, setDates] = useState({});
+    const [state, setState] = useState(0);
     const [formValues, setFormValues] = useState({
         user: '',
         password: '',
+        departament: '',
+        municipio: '',
         function: 'RegisUser',
         role: '2',
         voted: 'no'
     });
-
+    useEffect(() => {
+        const fetchDepartaments = async () => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/departaments`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                if (response.status === 200) {
+                    const data = await response.json();
+                    setDates(data); 
+                } else {
+                    alert("Error obteniendo departamentos");
+                }
+            } catch (error) {
+                console.error("Error en la solicitud:", error);
+            }
+        };
+        fetchDepartaments();
+    }, []);
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -36,7 +60,6 @@ function Register() {
             console.error("Error en la solicitud:", error);
         }
     };
-
     return (
         <div className="Main-login-container">
             <div className='Form-login-container'>
@@ -64,6 +87,30 @@ function Register() {
                             src={visibilityState ? ViewOff : View} alt='Icon'
                             onClick={() => setVisibilityState(!visibilityState)}
                         />
+                    </div>
+                    <p className='Text-departament'>Departamento y municipio</p>
+                    <div className='List-container-state'>
+                        <select className='List' onChange={(e) => {
+                                const selected = e.target.selectedOptions[0];
+                                setFormValues(prev => ({
+                                    ...prev,
+                                    departament: selected.value
+                                }));
+                                setState(Number(selected.id));
+                            }}>
+                            <option value='' disabled selected>Departamento</option>
+                            {dates.departamentos?.map((value, index) => (
+                                <option id={index} key={index} value={value.code}>
+                                    {value.name}
+                                </option>
+                            ))}
+                        </select>
+                        <select className='List' onChange={(e) => setFormValues(prev => ({ ...prev, municipio: e.target.value }))}>
+                            {dates.departamentos?.[Number(state)]?.municipios?.map((value, index) => (
+                                <option key={index} value={value.code}>{value.name}</option>
+                            ))}
+                            <option value='' disabled selected>Municipio o ciudad</option>
+                        </select>
                     </div>
                     <div className='Button-container'>
                         <button className='Button-sigin' type='submit'>Registrar</button>

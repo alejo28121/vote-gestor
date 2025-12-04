@@ -4,16 +4,17 @@ import PieChart from './circular';
 import BarChart from './Bar';
 import EditCandidates from './editcandidates'
 import VoteCandidates from './votescandidates'
+import DowloadDates from './pdf'
 import { Outlet } from 'react-router-dom';
-import Candidates from './editcandidates';
 
 function Dashboard() {
     const [votes, setVotes] = useState([]); 
     const [diagram, setDiagram] = useState("1");
     const [candidate, setCandidate] = useState("1");
     const socketRef = useRef(null);
+    const [childValue, setChildValue] = useState("");
     useEffect(() => {
-        const ws = new WebSocket("ws://52.87.177.138:8080/socket");
+        const ws = new WebSocket("ws://localhost:8080/socket");
         socketRef.current = ws;
 
         ws.onopen = () => {
@@ -45,11 +46,10 @@ function Dashboard() {
             }
         };
     }, []);
-    console.log(candidate === "2" ? votes.filter(item => item.tipo === 2).map(v => v.votes) : '')
     return (
         <div className='Main-dashboard'>
             <div className='Items-container'>
-                <VoteCandidates candidates={votes}></VoteCandidates>
+                <VoteCandidates candidates={votes} onChangeValue={setChildValue}></VoteCandidates>
                 <div className='list-votes'>
                     <h2 className='Vote-title'>Diagrama</h2>
                     <div className='List-container'>
@@ -65,17 +65,40 @@ function Dashboard() {
                     </div>
                     {diagram === "1" ? (
                         <PieChart 
-                            labels={votes.filter(item => item.tipo === parseInt(candidate)).map(v => v.candidate)}
-                            data={votes.filter(item => item.tipo === parseInt(candidate)).map(v => v.votes)}
+                            labels={votes.filter(item => item.tipo === parseInt(candidate)).filter(item => {
+                                    if (candidate === "3") {
+                                        return item.zone === childValue;
+                                    }
+                                    return true;
+                                }).map(v => v.candidate)}
+                            data={votes.filter(item => item.tipo === parseInt(candidate)).filter(item => {
+                                    if (candidate === "3") {
+                                        return item.zone === childValue;
+                                    }
+                                    return true;
+                                }).map(v => v.votes)}
                         />
                         ) : (
                         <BarChart
-                            labels={votes.filter(item => item.tipo === parseInt(candidate)).map(v => v.candidate)}
-                            data={votes.filter(item => item.tipo === parseInt(candidate)).map(v => v.votes)}
+                            labels={votes.filter(item => item.tipo === parseInt(candidate)).filter(item => {
+                                    if (candidate === "3") {
+                                        return item.zone === childValue;
+                                    }
+                                    return true;
+                                }).map(v => v.candidate)}
+                            data={votes.filter(item => item.tipo === parseInt(candidate)).filter(item => {
+                                    if (candidate === "3") {
+                                        return item.zone === childValue;
+                                    }
+                                    return true;
+                                }).map(v => v.votes)}
                         />
                         )}
                 </div>
                 <EditCandidates candidates={votes}></EditCandidates>
+                <div className='list-votes'>
+                    <button className='Button-menu' onClick={() => DowloadDates(votes)}>Descargar datos</button>
+                </div>
             </div>
             <Outlet/>
         </div>

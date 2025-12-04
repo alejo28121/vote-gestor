@@ -15,6 +15,7 @@ function President(){
     const [errorValue, setErrorValue] = useState("");
     const location = useLocation();
     const navigate = useNavigate();
+    const [munValue] = useState(info.municipio);
     const mode = location.state?.mode || 1;
     const [datesValue, setdatesValue] = useState({
         function : 'RegisVotes',
@@ -28,7 +29,7 @@ function President(){
         default: Default,
     };
     useEffect(() => {
-        const ws = new WebSocket("ws://52.87.177.138:8080/socket");
+        const ws = new WebSocket("ws://localhost:8080/socket");
         socketRef.current = ws;
     
         ws.onopen = () => {
@@ -93,14 +94,18 @@ function President(){
             }
         }
     }
-    console.log(votes.filter(item => item.tipo === mode));
     return(
         <div className="Container-menu-p">
             {loading ? (
                 <Loading></Loading>
                 ) : (
                 <div className='presidents'>
-                    {votes.filter(item => item.tipo === mode).map((item, index) => (
+                    {votes.filter(item => {
+                        if(mode === 3){
+                            return item.zone === munValue;
+                        }
+                        return true;
+                    }).filter(item => (item.tipo) === mode).map((item, index) => (
                         <div key={item.candidate} className={`Vote-menu-${select === index + 1 ? 's' : 'p'}`} onClick={(e) => {
                                 setdatesValue({
                                     ...datesValue,

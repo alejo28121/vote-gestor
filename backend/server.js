@@ -46,7 +46,7 @@ app.post("/login", async (req, res) => {
     console.log("📥 BODY RECIBIDO DESDE REACT:", req.body);
 
     try {
-        const result = JSON.parse(await runCprogram("./test", req.body));
+        const result = JSON.parse(await runCprogram("./test.exe", req.body));
 
         console.log("📤 RESPUESTA DEL PROGRAMA C:", result);
 
@@ -61,12 +61,31 @@ app.post("/login", async (req, res) => {
     }
 });
 
+app.post("/regisuser", async (req, res) => {
+    console.log("📥 BODY RECIBIDO DESDE REACT:", req.body);
+
+    try {
+        const result = JSON.parse(await runCprogram("./test.exe", req.body));
+
+        console.log("📤 RESPUESTA DEL PROGRAMA C:", result);
+
+        if (result.status === "ok") {
+        res.status(200).json(result);
+        } else {
+        res.status(401).json(result);
+        }
+    } catch (error) {
+        console.error("❌ ERROR EN /regisuser:", error);
+        res.status(500).json({ error: error });
+    }
+});
+
 app.post("/regisvote", async (req, res) => {
     console.log("BODY RECIBIDO PARA REGISTRAR VOTO:", req.body);
 
     try {
         const result = JSON.parse(
-        await runCprogram("./test", {
+        await runCprogram("./test.exe", {
             ...req.body,
             function: "RegisVotes",
         })
@@ -89,7 +108,7 @@ app.post("/regiscandidate", async (req, res) => {
 
     try {
         const result = JSON.parse(
-        await runCprogram("./test", {
+        await runCprogram("./test.exe", {
             ...req.body,
             function: "RegisCandidate",
         })
@@ -113,7 +132,7 @@ app.post("/validatevote", async (req, res) => {
 
     try {
         const result = JSON.parse(
-        await runCprogram("./test", {
+        await runCprogram("./test.exe", {
             ...req.body,
             function: "ValidateVote",
         })
@@ -136,7 +155,7 @@ app.post("/deletecandidate", async (req, res) => {
 
     try {
         const result = JSON.parse(
-        await runCprogram("./test", {
+        await runCprogram("./test.exe", {
             ...req.body,
             function: "EliminarCandidato",
         })
@@ -151,6 +170,29 @@ app.post("/deletecandidate", async (req, res) => {
         }
     } catch (err) {
         console.error(" ERROR EN /EliminarCandidato:", err);
+        res.status(500).json({ error: err });
+    }
+});
+app.get("/departaments", async (req, res) => {
+    console.log("BODY RECIBIDO PARA VALIDAR VOTO:", req.body);
+
+    try {
+        const result = JSON.parse(
+        await runCprogram("./test.exe", {
+            ...req.body,
+            function: "GetDepartamentos",
+        })
+        );
+
+        console.log("RESPUESTA VALIDATE VOTE:", result);
+
+        if (result.status === "ok") {
+        res.status(200).json(result);
+        } else {
+        res.status(401).json(result);
+        }
+    } catch (err) {
+        console.error(" ERROR EN /GetDepartamentos:", err);
         res.status(500).json({ error: err });
     }
 });

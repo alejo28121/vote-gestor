@@ -3,6 +3,87 @@
 #include <string.h>
 #include "cJSON.h"
 
+typedef struct {
+    const char* name;
+    const char* code;
+} Municipio;
+
+typedef struct {
+    const char* name;
+    const char* code;
+    const Municipio* municipios;
+    int municipios_count;
+} Departamento;
+
+void GetDepartamentos() {
+
+    FILE *f = fopen("./municipios.csv", "r");
+    if (!f) {
+        printf("{\"status\":\"error\",\"msg\":\"No se pudo abrir departamentos.csv\"}");
+        return;
+    }
+
+    char line[300];
+    char deptName[120], deptCode[20], munName[120], munCode[20];
+
+    cJSON *resp = cJSON_CreateObject();
+    cJSON *deptArray = cJSON_CreateArray();
+
+    typedef struct {
+        char code[20];
+        cJSON *deptObj;
+        cJSON *munArray;
+    } DeptItem;
+    DeptItem list[200];
+    int deptCount = 0;
+    fgets(line, sizeof(line), f); 
+    while (fgets(line, sizeof(line), f)) {
+        if (sscanf(line, "%119[^,],%19[^,],%119[^,],%19[^\n]", deptName, deptCode, munName, munCode) == 4) {
+            cJSON *deptObj = NULL;
+            cJSON *munArray = NULL;
+            int found = 0;
+            for (int i = 0; i < deptCount; i++) {
+                if (strcmp(list[i].code, deptCode) == 0) {
+                    deptObj = list[i].deptObj;
+                    munArray = list[i].munArray;
+                    found = 1;
+                    break;
+                }
+            }
+            if (!found) {
+                deptObj = cJSON_CreateObject();
+                munArray = cJSON_CreateArray();
+
+                cJSON_AddStringToObject(deptObj, "name", deptName);
+                cJSON_AddStringToObject(deptObj, "code", deptCode);
+                cJSON_AddItemToObject(deptObj, "municipios", munArray);
+
+                cJSON_AddItemToArray(deptArray, deptObj);
+
+                strcpy(list[deptCount].code, deptCode);
+                list[deptCount].deptObj = deptObj;
+                list[deptCount].munArray = munArray;
+                deptCount++;
+            }
+            cJSON *munObj = cJSON_CreateObject();
+            cJSON_AddStringToObject(munObj, "name", munName);
+            cJSON_AddStringToObject(munObj, "code", munCode);
+
+            cJSON_AddItemToArray(munArray, munObj);
+        }
+    }
+
+    fclose(f);
+
+    cJSON_AddStringToObject(resp, "status", "ok");
+    cJSON_AddItemToObject(resp, "departamentos", deptArray);
+
+    char *jsonOut = cJSON_Print(resp);
+    printf("%s", jsonOut);
+
+    free(jsonOut);
+    cJSON_Delete(resp);
+}
 
 void EliminarCandidato(cJSON *root) {
 
@@ -67,26 +148,30 @@ void EliminarCandidato(cJSON *root) {
 void RegisUser(cJSON *root) {
     cJSON *userItem = cJSON_GetObjectItem(root, "user");
     cJSON *passItem = cJSON_GetObjectItem(root, "password");
+    cJSON *depaItem = cJSON_GetObjectItem(root, "departament");
+    cJSON *muniItem = cJSON_GetObjectItem(root, "municipio");
 
     if (!userItem || !passItem) return;
 
     const char *id = userItem->valuestring;
     const char *password = passItem->valuestring;
+    const char *departament = depaItem->valuestring;
+    const char *municipio = muniItem->valuestring;
 
     FILE *f = fopen("./users.csv", "r");
     int exists = 0;
 
     if (f) {
-        char line[256], uid[50], pass[50], roleFile[10], votedFile[10];
+        char line[256], uid[50], pass[50], roleFile[10], votedFile[10], departamentFile[10], municipioFile[10];
 
-        fgets(line, sizeof(line), f); // Skip header (user,password,role,voted)
+        fgets(line, sizeof(line), f);
 
         while (fgets(line, sizeof(line), f)) {
-            line[strcspn(line, "\n")] = 0; // remove newline
+            line[strcspn(line, "\n")] = 0; 
 
             // uid,pass,role,voted
-            if (sscanf(line, "%49[^,],%49[^,],%9[^,],%9s",
-                       uid, pass, roleFile, votedFile) == 4) {
+            if (sscanf(line, "%49[^,],%49[^,],%9[^,],%9s,%49[^,],%49[^,]",
+                       uid, pass, roleFile, votedFile, departamentFile, municipioFile) == 4) {
 
                 if (strcmp(uid, id) == 0) {
                     exists = 1;
@@ -110,7 +195,7 @@ void RegisUser(cJSON *root) {
             cJSON_AddStringToObject(resp, "message", "Cannot open users.csv");
         } else {
             // user,password,role,voted
-            fprintf(f2, "%s,%s,2,no\n", id, password);
+            fprintf(f2, "%s,%s,2,no,%s,%s\n", id, password, departament, municipio);
             fclose(f2);
 
             cJSON_AddStringToObject(resp, "status", "ok");
@@ -280,7 +365,7 @@ void RegisCandidate(cJSON *root) {
 
 
 void ValidateUser(cJSON *root) {
-    char userDb[50], pass[50], rol[20], voto[10];
+    char userDb[50], pass[50], rol[20], voto[10], depa[10], muni[10];
     int found = 0;
 
     cJSON *userItem = cJSON_GetObjectItem(root, "user");
@@ -300,7 +385,7 @@ void ValidateUser(cJSON *root) {
     char header[256];
     fgets(header, sizeof(header), usersFile);  
 
-    while (fscanf(usersFile, "%49[^,],%49[^,],%49[^,],%9[^\n]\n", userDb, pass, rol, voto) == 4) {
+    while (fscanf(usersFile, "%49[^,],%49[^,],%49[^,],%9[^,],%49[^,],%49[^\n]\n", userDb, pass, rol, voto, depa, muni) == 6) {
 
         if (strcmp(user, userDb) == 0 && strcmp(password, pass) == 0) {
             found = 1;
@@ -317,6 +402,8 @@ void ValidateUser(cJSON *root) {
         cJSON_AddStringToObject(resp, "mensaje", "User was logined");
         cJSON_AddStringToObject(resp, "user", user);
         cJSON_AddStringToObject(resp, "rol", rol);
+        cJSON_AddStringToObject(resp, "departament", depa);
+        cJSON_AddStringToObject(resp, "municipio", muni);
     } else {
         cJSON_AddStringToObject(resp, "status", "Invalid");
         cJSON_AddStringToObject(resp, "mensaje", "Incorrect user or password");
@@ -489,6 +576,8 @@ int main() {
         RegisCandidate(root);
     } else if (strcmp(functionValue, "EliminarCandidato") == 0) {
         EliminarCandidato(root);
+    } else if (strcmp(functionValue, "GetDepartamentos") == 0) {
+        GetDepartamentos();
     }
     return 0;
 }

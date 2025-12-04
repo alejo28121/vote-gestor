@@ -125,9 +125,10 @@
 .presidents{
     width: 100vw;
     height: fit-content;
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(4, auto);
     align-items: center;
+    justify-items: center;
     justify-content: center;
     gap: 4vh;
 }
