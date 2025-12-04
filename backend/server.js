@@ -46,7 +46,7 @@ app.post("/login", async (req, res) => {
     console.log("📥 BODY RECIBIDO DESDE REACT:", req.body);
 
     try {
-        const result = JSON.parse(await runCprogram("./test.exe", req.body));
+        const result = JSON.parse(await runCprogram("./test", req.body));
 
         console.log("📤 RESPUESTA DEL PROGRAMA C:", result);
 
@@ -65,7 +65,7 @@ app.post("/regisuser", async (req, res) => {
     console.log("📥 BODY RECIBIDO DESDE REACT:", req.body);
 
     try {
-        const result = JSON.parse(await runCprogram("./test.exe", req.body));
+        const result = JSON.parse(await runCprogram("./test", req.body));
 
         console.log("📤 RESPUESTA DEL PROGRAMA C:", result);
 
@@ -85,7 +85,7 @@ app.post("/regisvote", async (req, res) => {
 
     try {
         const result = JSON.parse(
-        await runCprogram("./test.exe", {
+        await runCprogram("./test", {
             ...req.body,
             function: "RegisVotes",
         })
@@ -108,7 +108,7 @@ app.post("/regiscandidate", async (req, res) => {
 
     try {
         const result = JSON.parse(
-        await runCprogram("./test.exe", {
+        await runCprogram("./test", {
             ...req.body,
             function: "RegisCandidate",
         })
@@ -132,7 +132,7 @@ app.post("/validatevote", async (req, res) => {
 
     try {
         const result = JSON.parse(
-        await runCprogram("./test.exe", {
+        await runCprogram("./test", {
             ...req.body,
             function: "ValidateVote",
         })
@@ -155,7 +155,7 @@ app.post("/deletecandidate", async (req, res) => {
 
     try {
         const result = JSON.parse(
-        await runCprogram("./test.exe", {
+        await runCprogram("./test", {
             ...req.body,
             function: "EliminarCandidato",
         })
@@ -178,7 +178,7 @@ app.get("/departaments", async (req, res) => {
 
     try {
         const result = JSON.parse(
-        await runCprogram("./test.exe", {
+        await runCprogram("./test", {
             ...req.body,
             function: "GetDepartamentos",
         })
